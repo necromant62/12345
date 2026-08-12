@@ -251,8 +251,8 @@ body {
 .board-head,
 .board-row {
   display: grid;
-  grid-template-columns: minmax(180px, 1.4fr) 1fr 1fr;
-  gap: 0.55rem;
+  grid-template-columns: minmax(260px, 2fr) 0.85fr 0.85fr;
+  gap: 0.65rem;
   min-height: 0;
 }
 
@@ -271,27 +271,19 @@ body {
 .topic-cell {
   background: var(--panel);
   border-radius: var(--radius);
-  padding: 0.7rem 1rem;
+  padding: 0.85rem 1.25rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   box-shadow: var(--shadow);
-  border-left: 6px solid var(--topic, var(--crimson));
+  border-left: 8px solid var(--topic, var(--crimson));
   min-height: 0;
 }
 
-.topic-cell .dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--topic, var(--crimson));
-  flex-shrink: 0;
-}
-
 .topic-cell .name {
-  font-weight: 800;
-  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
-  line-height: 1.25;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.3vw, 1.55rem);
+  line-height: 1.2;
   color: var(--ink);
 }
 
@@ -301,7 +293,7 @@ body {
   background: linear-gradient(145deg, #ffffff, #f3f7fc);
   color: var(--navy);
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-size: clamp(1.6rem, 3.2vw, 2.35rem);
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--shadow);
@@ -341,11 +333,41 @@ body {
   align-items: center;
   gap: 1rem;
   padding-top: 0.35rem;
+  flex-wrap: wrap;
 }
 
-.hint {
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 600;
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.title-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.jump-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.jump-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.btn-sm {
+  padding: 0.55rem 1rem;
+  min-width: 3rem;
   font-size: 0.95rem;
 }
 
@@ -518,10 +540,10 @@ body {
 
   .board-head,
   .board-row {
-    grid-template-columns: 1.2fr 0.9fr 0.9fr;
+    grid-template-columns: 1.6fr 0.75fr 0.75fr;
   }
 
   .topic-cell .name {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 }

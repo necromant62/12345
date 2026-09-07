@@ -71,8 +71,11 @@ def test_xml() -> None:
     }
     assert required.issubset(set(oids)), required - set(oids)
 
+    assert tpl.find("./graphs") is None
+    graphs = root.findall("./graphs/graph")
+    assert len(graphs) >= 5
     keyset = set(keys)
-    for graph in tpl.findall("./graphs/graph"):
+    for graph in graphs:
         for gi in graph.findall("./graph_items/graph_item"):
             assert gi.findtext("./item/key") in keyset
 
@@ -98,7 +101,7 @@ def test_xml() -> None:
     assert ".min(5m)" in joined
     assert tpl.find("./valuemaps") is None
 
-    print(f"OK {XML.name}: {len(items)} items, {len(triggers)} triggers")
+    print(f"OK {XML.name}: {len(items)} items, {len(triggers)} triggers, {len(graphs)} graphs")
 
 
 if __name__ == "__main__":

@@ -1033,14 +1033,14 @@ def build_xml(catalog: list[dict]) -> str:
         steps = list(it.get("preprocess", []))
         if it.get("mul"):
             steps.insert(0, {"type": "MULTIPLIER", "parameters": [it["mul"]]})
-        if steps:
-            add_preprocessing(item, steps)
-        if "valuemap" in it:
-            add_valuemap_ref(item, it["valuemap"])
 
         applications = SubElement(item, "applications")
         application = SubElement(applications, "application")
         et_text(application, "name", app_name(it.get("tags")))
+        if "valuemap" in it:
+            add_valuemap_ref(item, it["valuemap"])
+        if steps:
+            add_preprocessing(item, steps)
 
         if it.get("triggers"):
             trigs = SubElement(item, "triggers")
@@ -1053,8 +1053,6 @@ def build_xml(catalog: list[dict]) -> str:
                 et_text(t, "priority", tr["priority"])
                 et_text(t, "manual_close", "YES")
 
-    add_tags(tpl, {"class": "hardware", "target": "ups", "vendor": "ATS-CONVERS"})
-
     macros_el = SubElement(tpl, "macros")
     for name, value, descr in MACROS:
         m = SubElement(macros_el, "macro")
@@ -1062,7 +1060,10 @@ def build_xml(catalog: list[dict]) -> str:
         et_text(m, "value", value)
         et_text(m, "description", descr)
 
-    graphs_el = SubElement(tpl, "graphs")
+    add_tags(tpl, {"class": "hardware", "target": "ups", "vendor": "ATS-CONVERS"})
+
+    # In Zabbix 5.0 graphs belong under <zabbix_export>, not inside <template>.
+    graphs_el = SubElement(root, "graphs")
     for g in GRAPHS:
         ge = SubElement(graphs_el, "graph")
         et_text(ge, "name", g["name"])
@@ -1523,6 +1524,8 @@ def validate(catalog: list[dict], xml_text: str) -> None:
             assert key in keys, key
     expr = tree.findtext(".//triggers/trigger/expression")
     assert expr and expr.startswith("{") and "last(/" not in (tree.findtext(".//triggers/trigger/expression") or "")
+    assert tree.find("./templates/template/graphs") is None
+    assert tree.find("./graphs/graph") is not None
     print(f"OK: {len(catalog)} items, version 5.0")
 
 

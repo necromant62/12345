@@ -9,13 +9,12 @@ MIB-файл из архива `WEBtel_II_ES_AUX_mib.zip` **нельзя имп�
 | Файл | Назначение |
 | --- | --- |
 | `zabbix/zbx_webtel_ii_es_aux_5.4.xml` | Шаблон для импорта в **Zabbix 5.4** (XML) |
-| `zabbix/zbx_webtel_ii_es_aux_5.4.xml.zip` | Тот же шаблон + MIB + README одним архивом |
-| `mibs/UPS-WEBTEL-II-ES-AUX.mib` | Восстановленный MIB по руководству КСДП.00080-10 |
-| `docs/oids.md` | Таблица OID для проверки `snmpget` |
+| `zabbix/zbx_webtel_ii_es_aux_5.4.xml.zip` | XML + оригинальный MIB + README |
+| `mibs/WEBtel_II_ES_AUX.mib` | Оригинальный MIB АТС-КОНВЕРС (не импортируется в Zabbix) |
+| `docs/oids.md` | Краткая таблица OID для `snmpget` |
 
-OID взяты из официального руководства АТС-КОНВЕРС
-[WEBtel II ES AUX](https://www.atsconvers.ru/media/dir/pdf/webteliiesaux.pdf),
-таблица 16. Enterprise: `1.3.6.1.4.1.22138` (ATS-KONVERS Ltd.).
+XML собран по файлу `WEBtel_II_ES_AUX.mib` (модуль `WEBTEL_II_ES_AUX-MIB`,
+enterprise `1.3.6.1.4.1.22138`, продукт `webtel_ii_es_aux` = `.1.10`).
 
 ## Как импортировать в Zabbix 5.4
 
@@ -69,13 +68,20 @@ snmpget -v1 -c public 192.168.1.254 .1.3.6.1.4.1.22138.1.10.2.1.0
 
 ## Карта режимов ИБП
 
-В руководстве режимы перечислены без чисел. В шаблоне принята нумерация
-0..9 в том же порядке, что и в веб-интерфейсе адаптера
-(как у соседнего адаптера WEBtel II RS, где режимы явно пронумерованы).
+Из `upsModeStatus` в `WEBtel_II_ES_AUX.mib` (это уже не догадка):
 
-Если подписи в Latest data не совпадают с экраном ИБП, сделайте
-`snmpget` OID `.1.3.6.1.4.1.22138.1.10.1.2.0` в каждом режиме и поправьте
-**Value mapping** `WEBtel UPS mode`.
+| Значение | MIB | Смысл |
+| --- | --- | --- |
+| 0 | powerOnMode | Включен |
+| 1 | standbyMode | Ожидание |
+| 2 | bypassMode | Обводная цепь |
+| 3 | onLineMode | Дежурный режим |
+| 4 | batteryMode | Автономный режим |
+| 5 | batteryTestMode | Тест батареи |
+| 6 | faultMode | Авария |
+| 7 | eCOMode | ECO |
+| 8 | converterMode | Преобразователь частоты |
+| 9 | shutdownMode | Выключен |
 
 ## Зачем тогда MIB
 

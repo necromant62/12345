@@ -144,9 +144,9 @@ def items() -> list[dict]:
         delay="30s",
         valuemap="WEBtel UPS mode",
         description=(
-            "Режим работы ИБП. Нумерация 0..9 соответствует порядку режимов "
-            "в руководстве КСДП.00080-10. Если подписи не совпадают с веб-интерфейсом "
-            "адаптера, поправьте карту значений после snmpget."
+            "upsModeStatus из WEBtel_II_ES_AUX.mib: "
+            "powerOn(0), standby(1), bypass(2), onLine(3), battery(4), "
+            "batteryTest(5), fault(6), ECO(7), converter(8), shutdown(9)."
         ),
         tags={"component": "status"},
         triggers=[
@@ -529,17 +529,27 @@ def items() -> list[dict]:
         ],
     )
     add(
-        key="webtel.ups.warning.register",
-        name="Регистр предупреждений",
+        key="webtel.ups.warnings",
+        name="Предупреждения ИБП (upsWanrings)",
         oid=".1.3.6.1.4.1.22138.1.10.3.4.5.0",
         delay="30s",
-        description="64-битный регистр предупреждений. Расшифровка битов — таблица 17 руководства КСДП.00080-10.",
+        value_type="TEXT",
+        trends="0",
+        history="30d",
+        description=(
+            "В MIB объект upsWanrings — DisplayString (64 бита предупреждений как строка), "
+            "не INTEGER. Расшифровка битов — таблица 17 руководства КСДП.00080-10."
+        ),
         tags={"component": "status"},
         triggers=[
             {
                 "id": "warnings",
-                "name": "WEBtel {HOST.NAME}: есть предупреждения ИБП (регистр={ITEM.LASTVALUE1})",
-                "expression": f"last(/{TPL}/webtel.ups.warning.register)<>0",
+                "name": "WEBtel {HOST.NAME}: есть предупреждения ИБП ({ITEM.LASTVALUE1})",
+                "expression": (
+                    f"length(last(/{TPL}/webtel.ups.warnings))>0 and "
+                    f"last(/{TPL}/webtel.ups.warnings)<>\"0\" and "
+                    f"last(/{TPL}/webtel.ups.warnings)<>\"00\""
+                ),
                 "priority": "WARNING",
             }
         ],
@@ -768,7 +778,7 @@ def items() -> list[dict]:
     )
     add(
         key="webtel.adapter.firmware",
-        name="Версия ПО адаптера WEBtel",
+        name="Имя изделия / версия ПО адаптера",
         oid=".1.3.6.1.4.1.22138.1.10.8.0",
         delay="1h",
         value_type="CHAR",
@@ -1341,13 +1351,12 @@ MIB-файл из архива `WEBtel_II_ES_AUX_mib.zip` **нельзя имп�
 | Файл | Назначение |
 | --- | --- |
 | `zabbix/zbx_webtel_ii_es_aux_5.4.xml` | Шаблон для импорта в **Zabbix 5.4** (XML) |
-| `zabbix/zbx_webtel_ii_es_aux_5.4.xml.zip` | Тот же шаблон + MIB + README одним архивом |
-| `mibs/UPS-WEBTEL-II-ES-AUX.mib` | Восстановленный MIB по руководству КСДП.00080-10 |
-| `docs/oids.md` | Таблица OID для проверки `snmpget` |
+| `zabbix/zbx_webtel_ii_es_aux_5.4.xml.zip` | XML + оригинальный MIB + README |
+| `mibs/WEBtel_II_ES_AUX.mib` | Оригинальный MIB АТС-КОНВЕРС (не импортируется в Zabbix) |
+| `docs/oids.md` | Краткая таблица OID для `snmpget` |
 
-OID взяты из официального руководства АТС-КОНВЕРС
-[WEBtel II ES AUX](https://www.atsconvers.ru/media/dir/pdf/webteliiesaux.pdf),
-таблица 16. Enterprise: `1.3.6.1.4.1.22138` (ATS-KONVERS Ltd.).
+XML собран по файлу `WEBtel_II_ES_AUX.mib` (модуль `WEBTEL_II_ES_AUX-MIB`,
+enterprise `1.3.6.1.4.1.22138`, продукт `webtel_ii_es_aux` = `.1.10`).
 
 ## Как импортировать в Zabbix 5.4
 
@@ -1401,13 +1410,20 @@ snmpget -v1 -c public 192.168.1.254 .1.3.6.1.4.1.22138.1.10.2.1.0
 
 ## Карта режимов ИБП
 
-В руководстве режимы перечислены без чисел. В шаблоне принята нумерация
-0..9 в том же порядке, что и в веб-интерфейсе адаптера
-(как у соседнего адаптера WEBtel II RS, где режимы явно пронумерованы).
+Из `upsModeStatus` в `WEBtel_II_ES_AUX.mib` (это уже не догадка):
 
-Если подписи в Latest data не совпадают с экраном ИБП, сделайте
-`snmpget` OID `.1.3.6.1.4.1.22138.1.10.1.2.0` в каждом режиме и поправьте
-**Value mapping** `WEBtel UPS mode`.
+| Значение | MIB | Смысл |
+| --- | --- | --- |
+| 0 | powerOnMode | Включен |
+| 1 | standbyMode | Ожидание |
+| 2 | bypassMode | Обводная цепь |
+| 3 | onLineMode | Дежурный режим |
+| 4 | batteryMode | Автономный режим |
+| 5 | batteryTestMode | Тест батареи |
+| 6 | faultMode | Авария |
+| 7 | eCOMode | ECO |
+| 8 | converterMode | Преобразователь частоты |
+| 9 | shutdownMode | Выключен |
 
 ## Зачем тогда MIB
 
@@ -1499,7 +1515,11 @@ def main() -> None:
     zip_path = ROOT / "zabbix" / "zbx_webtel_ii_es_aux_5.4.xml.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         zf.write(xml_path, arcname=xml_path.name)
-        zf.write(mib_path, arcname=mib_path.name)
+        orig_mib = ROOT / "mibs" / "WEBtel_II_ES_AUX.mib"
+        if orig_mib.exists():
+            zf.write(orig_mib, arcname=orig_mib.name)
+        else:
+            zf.write(mib_path, arcname=mib_path.name)
         zf.write(oids_path, arcname="oids.md")
         zf.write(readme_path, arcname="README.md")
     print(f"wrote {xml_path} ({xml_path.stat().st_size} bytes)")

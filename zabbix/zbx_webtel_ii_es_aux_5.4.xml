@@ -160,7 +160,7 @@
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.1.2.0</snmp_oid>
                     <key>webtel.ups.mode</key>
                     <delay>30s</delay>
-                    <description>Режим работы ИБП. Нумерация 0..9 соответствует порядку режимов в руководстве КСДП.00080-10. Если подписи не совпадают с веб-интерфейсом адаптера, поправьте карту значений после snmpget.</description>
+                    <description>upsModeStatus из WEBtel_II_ES_AUX.mib: powerOn(0), standby(1), bypass(2), onLine(3), battery(4), batteryTest(5), fault(6), ECO(7), converter(8), shutdown(9).</description>
                     <valuemap>
                         <name>WEBtel UPS mode</name>
                     </valuemap>
@@ -1314,13 +1314,16 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>4176c988d4a15d20badf6c96c1c24adc</uuid>
-                    <name>Регистр предупреждений</name>
+                    <uuid>bfdc5e44a68f54ad8d94b2023d916c76</uuid>
+                    <name>Предупреждения ИБП (upsWanrings)</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.4.5.0</snmp_oid>
-                    <key>webtel.ups.warning.register</key>
+                    <key>webtel.ups.warnings</key>
                     <delay>30s</delay>
-                    <description>64-битный регистр предупреждений. Расшифровка битов — таблица 17 руководства КСДП.00080-10.</description>
+                    <history>30d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <description>В MIB объект upsWanrings — DisplayString (64 бита предупреждений как строка), не INTEGER. Расшифровка битов — таблица 17 руководства КСДП.00080-10.</description>
                     <tags>
                         <tag>
                             <tag>component</tag>
@@ -1329,9 +1332,9 @@
                     </tags>
                     <triggers>
                         <trigger>
-                            <uuid>1614f3fa394d55b1b035a4fad7364ac3</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.warning.register)&lt;&gt;0</expression>
-                            <name>WEBtel {HOST.NAME}: есть предупреждения ИБП (регистр={ITEM.LASTVALUE1})</name>
+                            <uuid>676760d935e35e22aa8cb24fa887c22b</uuid>
+                            <expression>length(last(/UPS WEBtel II ES AUX SNMP/webtel.ups.warnings))&gt;0 and last(/UPS WEBtel II ES AUX SNMP/webtel.ups.warnings)&lt;&gt;&quot;0&quot; and last(/UPS WEBtel II ES AUX SNMP/webtel.ups.warnings)&lt;&gt;&quot;00&quot;</expression>
+                            <name>WEBtel {HOST.NAME}: есть предупреждения ИБП ({ITEM.LASTVALUE1})</name>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
                         </trigger>
@@ -1945,7 +1948,7 @@
                 </item>
                 <item>
                     <uuid>5e288645b04b512daebc4914d954cd31</uuid>
-                    <name>Версия ПО адаптера WEBtel</name>
+                    <name>Имя изделия / версия ПО адаптера</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.8.0</snmp_oid>
                     <key>webtel.adapter.firmware</key>

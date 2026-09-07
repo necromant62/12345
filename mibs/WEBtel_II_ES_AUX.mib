@@ -1,0 +1,3006 @@
+-- ATS Convers ltd.
+-- Private Enterprise MIB definition
+-- 15/10/2020
+
+-- This file describes the ATS Convers MIB.
+-- It includes object identifiers and object definitions of the ATS
+-- Convers MIB only, and should be used for compilation by a 
+-- management tool in order to extend the tool to support the ATS Convers 
+-- MIB.
+
+    WEBTEL_II_ES_AUX-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	system
+		FROM RFC1213-MIB
+	enterprises 
+		FROM RFC1155-SMI
+	OBJECT-TYPE
+		FROM RFC-1212
+	TRAP-TYPE
+	        FROM RFC-1215;
+
+	DisplayString	::=	OCTET STRING
+-- tree structure
+
+--
+-- predefined constants for easier definition
+--
+
+ats-convers			OBJECT IDENTIFIER ::= { enterprises 22138 }
+
+products			OBJECT IDENTIFIER ::= { ats-convers 1 }
+webtel_ii_es_aux	OBJECT IDENTIFIER ::= { products 10}
+
+status				OBJECT IDENTIFIER ::= { webtel_ii_es_aux 1}
+ratings				OBJECT IDENTIFIER ::= { webtel_ii_es_aux 2}
+measurements		OBJECT IDENTIFIER ::= { webtel_ii_es_aux 3}
+input				OBJECT IDENTIFIER ::= { measurements 1}
+bypass				OBJECT IDENTIFIER ::= { measurements 2}
+output				OBJECT IDENTIFIER ::= { measurements 3}
+internal			OBJECT IDENTIFIER ::= { measurements 4}
+configuration		OBJECT IDENTIFIER ::= { webtel_ii_es_aux 4}
+parameters			OBJECT IDENTIFIER ::= { configuration 1}
+flags				OBJECT IDENTIFIER ::= { configuration 2}
+control				OBJECT IDENTIFIER ::= { configuration 3}
+sensors				OBJECT IDENTIFIER ::= { configuration 4}
+temperature_sensor	OBJECT IDENTIFIER ::= { sensors 1}
+humidity_sensor		OBJECT IDENTIFIER ::= { sensors 2}
+config				OBJECT IDENTIFIER ::= { webtel_ii_es_aux 5}
+trapargs			OBJECT IDENTIFIER ::= { webtel_ii_es_aux 6}
+traps				OBJECT IDENTIFIER ::= { webtel_ii_es_aux 7}
+ats-traps			OBJECT IDENTIFIER ::= { webtel_ii_es_aux 20 }
+
+--=====================================================================
+-- variables start
+--=====================================================================
+
+-- 1.3.6.1.4.1.22138.1.10.1.1
+upsConnectionStatus	OBJECT-TYPE
+	SYNTAX INTEGER{disconnected(0), connected(1)}
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS connection status"
+	::= { status 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.1.2
+upsModeStatus	OBJECT-TYPE
+	SYNTAX INTEGER{powerOnMode(0), standbyMode(1), bypassMode(2), onLineMode(3), batteryMode(4), batteryTestMode(5), 
+					faultMode(6), eCOMode(7), converterMode(8), shutdownMode(9)}
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS connection status"
+	::= { status 2 }
+--=====================================================================
+-- UPS Ratings data
+--=====================================================================	
+	
+-- 1.3.6.1.4.1.22138.1.10.2.1
+upsModelName	OBJECT-TYPE
+	SYNTAX DisplayString
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS model name"
+	::= { ratings 1 }
+	
+-- 1.3.6.1.4.1.22138.1.10.2.2
+upsRatingApparentPower	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "VA"	
+	ACCESS read-only
+	STATUS current	
+	DESCRIPTION
+		"UPS rating apparent power"
+	::= { ratings 2 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.2.3
+upsRatingPowerFactor	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "%"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS rating power factor. UPA rating real power (W) = 'apparent power'*100/'power factor'"
+	::= { ratings 3 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.2.4
+upsRatingInputVoltage	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS rating input voltage"
+	::= { ratings 4 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.2.5
+upsRatingOutputVoltage	OBJECT-TYPE
+	SYNTAX INTEGER {v200V(200), v208V(208), v220V(220), v230V(230), v240V(240)}
+	UNITS "V"	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"UPS rating output voltage. For 3-phase UPS value 200V not supported. Write possible only in bypass or standby mode"
+	::= { ratings 5 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.2.6
+upsRatingOutputCurrent	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "A"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS rating output current"
+	::= { ratings 6 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.2.7
+upsRatingOutputFrequency10x	OBJECT-TYPE
+	SYNTAX INTEGER {f50Hz(500), f60Hz(600)}
+	UNITS "0.1 Hz"	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"UPS rating output frequency. Write possible only in bypass or standby mode"
+	::= { ratings 7 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.2.8
+upsRatingBatteryVoltage10x	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS rating battery voltage"
+	::= { ratings 8 }			
+	
+--=====================================================================
+-- UPS Measurement data
+--=====================================================================	
+
+--=====================================================================
+-- Input
+--=====================================================================		
+-- 1.3.6.1.4.1.22138.1.10.3.1.1
+upsInputVoltage10xPhase1	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Input voltage (for 1 phase UPS), or phase 1 input voltage(for 3-phase UPS)"
+	::= { input 1 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.1.2
+upsInputVoltage10xPhase2	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 2 input voltage(for 3-phase UPS)"
+	::= { input 2 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.1.3
+upsInputVoltage10xPhase3	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 3 input voltage(for 3-phase UPS)"
+	::= { input 3 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.3.1.4
+upsInputVoltage10xLine12	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Input voltage line 1-2 (for 3-phase UPS)"
+	::= { input 4 }				
+	
+-- 1.3.6.1.4.1.22138.1.10.3.1.5
+upsInputVoltage10xLine23	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Input voltage line 2-3 (for 3-phase UPS)"
+	::= { input 5 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.3.1.6
+upsInputVoltage10xLine31	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Input voltage line 2-3 (for 3-phase UPS)"
+	::= { input 6 }		
+		
+-- 1.3.6.1.4.1.22138.1.10.3.1.7
+upsInputFrequency10x	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 Hz"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Input frequency"
+	::= { input 7 }	
+		
+	--=====================================================================
+-- Bypass
+--=====================================================================		
+-- 1.3.6.1.4.1.22138.1.10.3.2.1
+upsBypassVoltage10xPhase1	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 1 bypass voltage(for 3/3-phase UPS)"
+	::= { bypass 1 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.2.2
+upsBypassVoltage10xPhase2	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 2 bypass voltage(for 3/3-phase UPS)"
+	::= { bypass 2 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.2.3
+upsBypassVoltage10xPhase3	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 3 bypass voltage(for 3/3-phase UPS)"
+	::= { bypass 3 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.3.2.4
+upsBypassVoltage10xLine12	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Bypass voltage line 1-2 (for 3/3-phase UPS)"
+	::= { bypass 4 }				
+	
+-- 1.3.6.1.4.1.22138.1.10.3.2.5
+upsBypassVoltage10xLine23	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Bypass voltage line 2-3 (for 3/3-phase UPS)"
+	::= { bypass 5 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.3.2.6
+upsBypassVoltage10xLine31	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Bypass voltage line 2-3 (for 3/3-phase UPS)"
+	::= { bypass 6 }		
+		
+-- 1.3.6.1.4.1.22138.1.10.3.2.7
+upsBypassFrequency10x	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 Hz"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Bypass frequency(for 3/3-phase UPS)"
+	::= { bypass 7 }		
+		
+--=====================================================================
+-- Output
+--=====================================================================	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.1
+upsOutputVoltage10xPhase1	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Output voltage (for 1 phase UPS), or phase 1 output voltage(for 3-phase UPS)"
+	::= { output 1 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.2
+upsOutputVoltage10xPhase2	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 2 output voltage(for 3-phase UPS)"
+	::= { output 2 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.3
+upsOutputVoltage10xPhase3	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 3 output voltage(for 3-phase UPS)"
+	::= { output 3 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.4
+upsOutputVoltage10xLine12	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Output voltage line 1-2 (for 3-phase UPS)"
+	::= { output 4 }				
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.5
+upsOutputVoltage10xLine23	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Output voltage line 2-3 (for 3-phase UPS)"
+	::= { output 5 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.6
+upsOutputVoltage10xLine31	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Output voltage line 2-3 (for 3-phase UPS)"
+	::= { output 6 }		
+		
+-- 1.3.6.1.4.1.22138.1.10.3.3.7
+upsOutputFrequency10x	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 Hz"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Output frequency"
+	::= { output 7 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.8
+upsOutputCurrent10xTotal	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 A"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Output current (for 1 phase UPS), or total output current(for 3-phase UPS)"
+	::= { output 8 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.9
+upsOutputCurrent10xPhase1	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 A"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 1 output current(for 3-phase UPS)"
+	::= { output 9 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.10
+upsOutputCurrent10xPhase2	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 A"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 2 output current(for 3-phase UPS)"
+	::= { output 10 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.11
+upsOutputCurrent10xPhase3	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 A"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 3 output current(for 3-phase UPS)"
+	::= { output 11 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.12
+upsOutputLoadTotal	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "%"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Output load (for 1 phase UPS), or total output load (for 3-phase UPS)"
+	::= { output 12 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.13
+upsOutputLoadPhase1	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "%"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 1 output load (for 3-phase UPS)"
+	::= { output 13 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.14
+upsOutputLoadPhase2	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "%"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 2 output load (for 3-phase UPS)"
+	::= { output 14 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.3.15
+upsOutputLoadPhase3	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "%"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Phase 3 output load (for 3-phase UPS)"
+	::= { output 15 }	
+	
+--=====================================================================
+-- Internal
+--=====================================================================	
+	
+-- 1.3.6.1.4.1.22138.1.10.3.4.1
+upsTemperature10x	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "deg. C"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Internal temperature"
+	::= { internal 1 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.3.4.2
+upsBatteryVoltage10x	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "0.1 V"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Battery voltage"
+	::= { internal 2 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.3.4.3
+upsBatteryTime	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "min."	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Battery remaining time"
+	::= { internal 3 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.3.4.4
+upsBatteryCapacity	OBJECT-TYPE
+	SYNTAX INTEGER
+	UNITS "%"	
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Battery remaining capacity"
+	::= { internal 4 }	
+
+-- 1.3.6.1.4.1.22138.1.10.3.4.5
+upsWanrings	OBJECT-TYPE
+	SYNTAX DisplayString
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS warnini status 64 bits (64...0)"
+	::= { internal 5 }	
+
+-- 1.3.6.1.4.1.22138.1.10.3.4.6
+upsLastFault	OBJECT-TYPE
+	SYNTAX INTEGER
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"UPS last fault code"
+	::= { internal 6 }
+	
+--=====================================================================
+-- Configuration
+--=====================================================================		
+
+--=====================================================================
+-- Parameters
+--=====================================================================			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.1
+upsBatteryGroups	OBJECT-TYPE
+	SYNTAX INTEGER (1..99)
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Battary groups Installed"
+	::= { parameters 1 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.2
+upsBypassVoltageHighLevel	OBJECT-TYPE
+	SYNTAX INTEGER (230..276)
+	UNITS "V" 	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Bypass voltage high level"
+	::= { parameters 2 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.3
+upsBypassVoltageLowLevel	OBJECT-TYPE
+	SYNTAX INTEGER (110..220)
+	UNITS "V"	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Bypass voltage low level"
+	::= { parameters 3 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.4
+upsBypassFrequency10xHighLevel	OBJECT-TYPE
+	SYNTAX INTEGER (510..700)
+	UNITS "0.1 Hz"	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Bypass frequency high level"
+	::= { parameters 4 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.5
+upsBypassFrequency10xLowLevel	OBJECT-TYPE
+	SYNTAX INTEGER (400..590)
+	UNITS "0.1 Hz"	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Bypass frequency low level"
+	::= { parameters 5 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.6
+upsEcoModeVoltageHighLevel	OBJECT-TYPE
+	SYNTAX INTEGER (207..264)
+	UNITS "V" 	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Bypass voltage high level"
+	::= { parameters 6 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.7
+upsEcoModeVoltageLowLevel	OBJECT-TYPE
+	SYNTAX INTEGER (176..233)
+	UNITS "V"	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Bypass voltage low level"
+	::= { parameters 7 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.1.8
+upsControledOutputTime	OBJECT-TYPE
+	SYNTAX INTEGER (1..999)
+	UNITS "min."	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Controlled output working time in battery mode"
+	::= { parameters 8 }	
+
+-- 1.3.6.1.4.1.22138.1.10.4.1.9
+upsBatteryAh	OBJECT-TYPE
+	SYNTAX INTEGER (7..999)
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Battary AH value to set"
+	::= { parameters 9 }	
+	
+--=====================================================================
+-- Flags
+--=====================================================================		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.1
+upsFlagBypassModeBuzzer	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable bypass audible warning"
+	::= { flags 1 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.2
+upsFlagBatteryModeBuzzer	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable battery mode audible warning"
+	::= { flags 2 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.3
+upsFlagAlarmModeBuzzer	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable audible alarm"
+	::= { flags 3 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.4
+upsFlagAutoRestart	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable auto-Restart"
+	::= { flags 4 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.5
+upsFlagBypassMode	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable bypass when UPS turn off"
+	::= { flags 5 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.6
+upsFlagBypassForbidding	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable bypass forbidding in warning or alarm mode"
+	::= { flags 6 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.7
+upsFlagEcoMode	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable high efficiency mode"
+	::= { flags 7 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.8
+upsFlagRestart3Times	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable short restart 3 times "
+	::= { flags 8 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.9
+upsFlagCOutputOff	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable controlled output off when the delay release time is over in battery mode "
+	::= { flags 9 }			
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.10
+upsFlagInputFault	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable Input fault detect"
+	::= { flags 10 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.11
+upsFlagNoBatteryBuzzer	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable audible alarm when battery disconnected"
+	::= { flags 11 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.12
+upsFlagAutoStartPowerOn	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable auto-Start at Power On"
+	::= { flags 12 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.4.2.13
+upsFlagAutoSelfTest	OBJECT-TYPE
+	SYNTAX INTEGER {disabled(0), enabled(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Enable/disable auto self testing"
+	::= { flags 13 }	
+	
+--=====================================================================
+-- Control
+--=====================================================================	
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.1
+upsTurnON_OFF	OBJECT-TYPE
+	SYNTAX INTEGER {off(0), on(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Turn on / off UPS"
+	::= { control 1 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.2
+upsBuzzerTurnON_OFF	OBJECT-TYPE
+	SYNTAX INTEGER {off(0), on(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Turn on / off buzzer if bypass or battery mode"
+	::= { control 2 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.3
+upsCOutputTurnON_OFF	OBJECT-TYPE
+	SYNTAX INTEGER {off(0), on(1), not_present(2)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Turn on / off controlled output"
+	::= { control 3 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.4
+upsRestart	OBJECT-TYPE
+	SYNTAX INTEGER (1..10)
+	UNITS "min."	
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Restart UPS after time 1..10 minutes"
+	::= { control 4 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.5
+upsTest	OBJECT-TYPE
+	SYNTAX INTEGER {finished(0), test-10-seconds(1), test-full-discharge(2), test-started(3)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Start battery test (active only in on-line mode). test-started(3) - for read status only"
+	::= { control 5 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.6
+upsDefaults	OBJECT-TYPE
+	SYNTAX INTEGER {n(0), def(1)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Set factory defaults parameters. Write possible only in bypass or standby mode"
+	::= { control 6 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.7
+upsUserTest	OBJECT-TYPE
+	SYNTAX INTEGER (1..99)
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Start battery test for user defined duration from 1 to 99 minutes"
+	::= { control 7 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.4.3.8
+upsTestBreak OBJECT-TYPE
+	SYNTAX INTEGER (1)
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Stop battery test"
+	::= { control 8 }	
+--=====================================================================
+-- Temperature sensor
+--=====================================================================	
+-- 1.3.6.1.4.1.22138.1.10.4.4.1.1
+temperatureSensorName	OBJECT-TYPE
+	SYNTAX DisplayString(SIZE (0..16))
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Temperature sensor name"
+	::= { temperature_sensor 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.1.2
+temperatureSensorTMPx10	OBJECT-TYPE
+	SYNTAX INTEGER (-1000..1500)
+	UNITS "0.1 deg.C"
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Temperature sensor temperature. -1000 - sensor disconnected"
+	::= { temperature_sensor 2 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.1.3
+temperatureSensorStatus	OBJECT-TYPE
+	SYNTAX INTEGER { norm(0), low_alarm(1), high_alarm(2), disconn_alarm(3) }
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Temperature sensor status"
+	::= { temperature_sensor 3 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.1.4
+temperatureSensorLowLevel	OBJECT-TYPE
+	SYNTAX INTEGER (-55..125)
+	UNITS "deg.C"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Temperature sensor low alarm level"
+	::= { temperature_sensor 4 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.1.5
+temperatureSensorHighLevel	OBJECT-TYPE
+	SYNTAX INTEGER (-55..125)
+	UNITS "deg.C"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Temperature sensor high alarm level"
+	::= { temperature_sensor 5 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.1.6
+temperatureSensorHysteresis	OBJECT-TYPE
+	SYNTAX INTEGER  (0..125)
+	UNITS "deg.C"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Temperature sensor Hysteresis"
+	::= { temperature_sensor 6 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.4.1.7
+temperatureSensorEventLevel OBJECT-TYPE
+	SYNTAX INTEGER { notification(0), wanring(1), alarm(2) }
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+        "Temperature sensor event level"
+    ::= { temperature_sensor  7 }
+	
+--=====================================================================
+-- Humidity sensor
+--=====================================================================		
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.1
+humiditySensorHumName	OBJECT-TYPE
+	SYNTAX DisplayString(SIZE (0..16))
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor name"
+	::= { humidity_sensor 1 }
+	
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.2
+humiditySensorHUMx10	OBJECT-TYPE
+	SYNTAX INTEGER (0..1000)
+	UNITS "0.1 %"
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor current humidity. 0 - sensor disconnected"
+	::= { humidity_sensor 2 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.3
+humiditySensorHumStatus	OBJECT-TYPE
+	SYNTAX INTEGER { norm(0), low_alarm(1), high_alarm(2), disconn_alarm(3) }
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor humidity status"
+	::= { humidity_sensor 3 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.4
+humiditySensorHumLowLevel	OBJECT-TYPE
+	SYNTAX INTEGER (0..100)
+	UNITS "%"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor humidity low alarm level"
+	::= { humidity_sensor 4 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.5
+humiditySensorHumHighLevel	OBJECT-TYPE
+	SYNTAX INTEGER (0..100)
+	UNITS "%"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor humidity high alarm level"
+	::= { humidity_sensor 5 }
+	
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.6
+humiditySensorHumHysteresis	OBJECT-TYPE
+	SYNTAX INTEGER  (0..100)
+	UNITS "%"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor humidity Hysteresis"
+	::= { humidity_sensor 6 }	
+	
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.7
+humiditySensorHumEventLevel OBJECT-TYPE
+	SYNTAX INTEGER { notification(0), wanring(1), alarm(2) }
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+        "Humidity sensor humidity event level"
+    ::= { humidity_sensor 7 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.8
+humiditySensorTempName	OBJECT-TYPE
+	SYNTAX DisplayString(SIZE (0..16))
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor temperature name"
+	::= { humidity_sensor 8 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.9
+humiditySensorTMPx10	OBJECT-TYPE
+	SYNTAX INTEGER (-1000..1500)
+	UNITS "0.1 deg.C"
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor current temperature. -1000 - sensor disconnected"
+	::= { humidity_sensor 9 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.10
+humiditySensorTempStatus	OBJECT-TYPE
+	SYNTAX INTEGER { norm(0), low_alarm(1), high_alarm(2), disconn_alarm(3) }
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor temperature status"
+	::= { humidity_sensor 10 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.11
+humiditySensorTempLowLevel	OBJECT-TYPE
+	SYNTAX INTEGER (-55..125)
+	UNITS "deg.C"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor temperature low alarm level"
+	::= { humidity_sensor 11 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.12
+humiditySensorTempHighLevel	OBJECT-TYPE
+	SYNTAX INTEGER (-55..125)
+	UNITS "deg.C"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor temperature high alarm level"
+	::= { humidity_sensor 12 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.13
+humiditySensorTempHysteresis	OBJECT-TYPE
+	SYNTAX INTEGER  (0..125)
+	UNITS "deg.C"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Humidity sensor temperature Hysteresis"
+	::= { humidity_sensor 13 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.4.4.2.14
+humiditySensorTempEventLevel OBJECT-TYPE
+	SYNTAX INTEGER { notification(0), wanring(1), alarm(2) }
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+        "Humidity sensor temperature event level"
+    ::= { humidity_sensor 14 }
+	
+--=====================================================================
+-- Discrete Inputs
+--=====================================================================		
+-- 1.3.6.1.4.1.22138.1.10.4.4.3
+dInputsTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF DInputsEntry
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION
+        "Discrete inputs table"
+    ::= { sensors 3 }        
+
+DInputsEntry ::=
+	SEQUENCE {
+		dInputNumber
+			INTEGER,
+		dInputName
+			DisplayString,
+		dInputAlarmStatus
+			INTEGER,
+		dInputType
+			INTEGER,
+		dInputAlarmTimer
+			INTEGER,
+		dInputEventLevel
+			INTEGER		
+	}  
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.3.1
+dInputsEntry OBJECT-TYPE
+    SYNTAX DInputsEntry
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION
+        "Discrete inputs info."
+    INDEX { dInputNumber }
+     ::= { dInputsTable 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.3.1.1
+dInputNumber  OBJECT-TYPE
+    SYNTAX INTEGER(0..3)
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION
+        "Index of Discrete inputs"
+    ::= { dInputsEntry 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.3.1.2
+dInputName	OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (0..15))
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Discrete input name"
+	::= { dInputsEntry 2 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.3.1.3
+dInputAlarmStatus	OBJECT-TYPE
+	SYNTAX INTEGER { norm(0), alarm(1),  disconnected(3)}
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Discrete input alarm status"
+	::= { dInputsEntry 3 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.3.1.4
+dInputType	OBJECT-TYPE
+	SYNTAX INTEGER { no(0), nc(1) }
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Discrete input type (normal opened, normal closed)"
+	::= { dInputsEntry 4 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.3.1.5
+dInputAlarmTimer		OBJECT-TYPE
+	SYNTAX INTEGER (0..99)
+	UNITS "seconds"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Discrete input alarm timer"
+	::= { dInputsEntry 5 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.3.1.6
+dInputEventLevel OBJECT-TYPE
+	SYNTAX INTEGER { notification(0), wanring(1), alarm(2) }
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+        "Discrete input event level"
+    ::= { dInputsEntry 6 }
+	
+--=====================================================================
+-- Relays 
+--=====================================================================	
+-- 1.3.6.1.4.1.22138.1.10.4.4.4
+rOutputsTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF ROutputsEntry
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION
+        "Relays outputs table"
+    ::= { sensors 4 }        
+
+ROutputsEntry ::=
+	SEQUENCE {
+		rOutputNumber
+			INTEGER,
+		rOutputType
+			INTEGER,
+		rOutputState
+			INTEGER		
+	}  
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.4.1
+rOutputsEntry OBJECT-TYPE
+    SYNTAX ROutputsEntry
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION
+        "Relays outputs info."
+    INDEX { rOutputNumber }
+     ::= { rOutputsTable 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.4.1.1
+rOutputNumber  OBJECT-TYPE
+    SYNTAX INTEGER(0..3)
+    MAX-ACCESS not-accessible
+    STATUS current
+    DESCRIPTION
+        "Index of Relays outputs"
+    ::= { rOutputsEntry 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.4.1.2
+rOutputType	OBJECT-TYPE
+	SYNTAX INTEGER { ups_standby_mode(0), ups_bypass_mode(1), ups_line_mode(2), ups_battery_mode(3), ups_fault_mode(4), ups_fault_mode_or_battery_low(5),
+					ups_eco_mode(6), ups_converter_mode(7), ups_warnings_present(8), ups_battery_disconnected(9), ups_neutral_disconnected(10),
+					ups_phase_neutral_wrong(11), ups_3phases_wrong(12), ups_battery_low(13), ups_overload(14), ups_epo_active(15), ups_overheat(16),
+					ups_charger_fault(17), ups_utility_unbalanced(18), relay_off(19), relay_on(20), din1_alarm(21), din2_alarm(22), din3_alarm(23), din4_alarm(24),
+					din_any_alarm(25), temp_sensor_alarm(26), hum_sensor_alarm(27), humt_sensor_alarm(28), hum_any_alarm(29), hum_temp_any_alarm(30),
+					din_temp_hum_any_alarm(31), ups_din_temp_hum_any_alarm(32),  battery_discharged(33)}
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Relay output action type based on UPS mode"
+	::= { rOutputsEntry 2 }
+
+-- 1.3.6.1.4.1.22138.1.10.4.4.4.1.3
+rOutputState	OBJECT-TYPE
+	SYNTAX INTEGER { relay_off(0), relay_on(1),  relay_disconnected(3)}
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Relay output state"
+	::= { rOutputsEntry 3 }
+
+-- ==============================================================
+-- config variables
+-- ==============================================================
+-- 1.3.6.1.4.1.22138.1.10.5.1
+date	OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (8))
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Date"
+	::= { config 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.5.2
+time	OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (8))
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Time"
+	::= { config 2 }
+
+-- 1.3.6.1.4.1.22138.1.10.5.3
+sntp_sysTimeUpdate_Enable	OBJECT-TYPE
+	SYNTAX INTEGER { disable(0), enable(1) }
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Update time via SNTP"
+	::= { config 3 }
+
+-- 1.3.6.1.4.1.22138.1.10.5.4
+timeZone	OBJECT-TYPE
+	SYNTAX INTEGER (-12..12)
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Time zone"
+	::= { config 4 }
+
+-- 1.3.6.1.4.1.22138.1.10.5.5
+sntp_sysTimeUpdate_Period	OBJECT-TYPE
+	SYNTAX INTEGER (0..99)
+	UNITS "hours"
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"SNTP time update period (hours)"
+	::= { config 5 }
+
+-- 1.3.6.1.4.1.22138.1.10.5.6
+sntp_sysTimeUpdate_Server	OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (0..30))
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"SNTP server"
+	::= { config 6 }
+
+-- 1.3.6.1.4.1.22138.1.10.5.7
+clearLog	OBJECT-TYPE
+	SYNTAX INTEGER { clr(1) }
+	ACCESS read-write
+	STATUS current
+	DESCRIPTION
+		"Clear system log"
+	::= { config 7 }
+
+-- ==============================================================
+-- trap variables
+-- ==============================================================
+-- 1.3.6.1.4.1.22138.1.10.6.1
+trapCommunity OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..16))
+    ACCESS  read-write
+    STATUS current
+    DESCRIPTION
+        "Trap community to be used by agent to send trap"
+    ::= { trapargs 1 }
+
+-- 1.3.6.1.4.1.22138.1.10.6.2
+trapReceiverIPAddress1 OBJECT-TYPE
+    SYNTAX  IpAddress
+    ACCESS  read-write
+    STATUS current
+    DESCRIPTION
+        "Trap receiver IP address"
+    ::= { trapargs 2 }
+
+-- 1.3.6.1.4.1.22138.1.10.6.3
+trapReceiverIPAddress2 OBJECT-TYPE
+    SYNTAX  IpAddress
+    ACCESS  read-write
+    STATUS current
+    DESCRIPTION
+        "Trap receiver IP address"
+    ::= { trapargs 3 }
+
+-- 1.3.6.1.4.1.22138.1.10.6.4
+trapReceiverIPAddress3 OBJECT-TYPE
+    SYNTAX  IpAddress
+    ACCESS  read-write
+    STATUS current
+    DESCRIPTION
+        "Trap receiver IP address"
+    ::= { trapargs 4 }
+
+-- 1.3.6.1.4.1.22138.1.10.7.1
+trapsText OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (0..199))
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Trap notification information for the SNMP Manager."
+	::= { traps 1 }      
+	
+
+-- 1.3.6.1.4.1.22138.1.10.7.2
+trapsLevel OBJECT-TYPE
+	SYNTAX INTEGER { notification(0), wanring(1), alarm(2) }
+	ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		"Trap notification level for the SNMP Manager."
+	::= { traps 2 }   	
+
+--=====================================================================
+	
+-- 1.3.6.1.4.1.22138.1.10.8
+name OBJECT-TYPE
+	SYNTAX  DisplayString
+	ACCESS  read-only
+	STATUS  current
+	DESCRIPTION
+		"Product name"
+	::= { webtel_ii_es_aux 8 }	
+		
+-- 1.3.6.1.4.1.22138.1.10.9
+webtelSerial OBJECT-TYPE
+	SYNTAX  DisplayString (SIZE (0..10))
+	ACCESS  read-write
+	STATUS  current
+	DESCRIPTION
+		"WEBtel Serial Number"
+	::= {  webtel_ii_es_aux 9 }		
+	
+-- 1.3.6.1.4.1.22138.1.10.10
+upsSerial OBJECT-TYPE
+	SYNTAX  DisplayString (SIZE (0..14))
+	ACCESS  read-write
+	STATUS  current
+	DESCRIPTION
+		"UPS Serial Number"
+	::= {  webtel_ii_es_aux 10}
+	
+-- 1.3.6.1.2.1.1.6
+location OBJECT-TYPE
+	SYNTAX  DisplayString (SIZE (0..35))
+	ACCESS  read-write
+	STATUS  current
+	DESCRIPTION
+		"Product location"
+	::= { system 6 }		
+--=====================================================================
+-- Traps Definitions start
+--=====================================================================
+log_Error TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Log Error"
+    ::= 0
+	
+log_ups_Connected TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS connected"
+    ::= 1	
+	
+log_ups_Disconnected TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS disconnected"
+    ::= 2		
+	
+log_ups_ModePowerOn TRAP-TYPE
+    ENTERPRISE ats-traps 
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Power on mode"
+    ::= 3		
+	
+log_ups_ModeStandby TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Standby mode"
+    ::= 4		
+	
+log_ups_ModeBypass TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Bypass mode"
+    ::= 5		
+	
+log_ups_ModeOnLine TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS OnLine mode"
+    ::= 6			
+	
+log_ups_ModeBattery TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Battery mode"
+    ::= 7		
+	
+log_ups_ModeBatteryTest TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Battery test mode"
+    ::= 8	
+	
+log_ups_ModeAlarm TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Alarm mode"
+    ::= 9
+	
+log_ups_ModeECO TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS ECO mode"
+    ::= 10	
+	
+log_ups_ModeConverter TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Frequency converter mode"
+    ::= 11	
+	
+log_ups_ModeShutdown TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS Shutdown mode"
+    ::= 12		
+	
+log_BatteryDisconnected TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery disconnected"
+    ::= 20		
+	
+log_EndAlarm_BatteryDisconnected TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Battery disconnected"
+    ::= 21			
+	
+log_NeutralDisconnected TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Neutral disconnected"
+    ::= 22		
+	
+log_EndAlarm_NeutralDisconnected TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Neutral disconnected"
+    ::= 23		
+	
+log_NeutralLineWrongConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Neutral and line wires oppositely connected "
+    ::= 24		
+	
+log_EndAlarm_NeutralLineWrongConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Neutral and line wires oppositely connected "
+    ::= 25		
+	
+log_PhaseSequenceIncorrect TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Phase sequence incorrect"
+    ::= 26		
+	
+log_EndAlarm_PhaseSequenceIncorrect TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Phase sequence incorrect"
+    ::= 27	
+	
+log_PhaseSequenceIncorrectBypass TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Phase sequence incorrect in bypass "
+    ::= 28		
+	
+log_EndAlarm_PhaseSequenceIncorrectBypass TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Phase sequence incorrect in bypass "
+    ::= 29		
+	
+log_InputFrequencyUnstableBypass TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Input frequency unstable in bypass"
+    ::= 30		
+	
+log_EndAlarm_InputFrequencyUnstableBypass TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Input frequency unstable in bypass"
+    ::= 31		
+	
+log_BatteryOvercharged TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery overcharged"
+    ::= 32	
+	
+log_EndAlarm_BatteryOvercharged TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Battery overcharged"
+    ::= 33			
+	
+log_LowBatteryVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Low battery voltage"
+    ::= 34
+	
+log_EndAlarm_LowBatteryVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Low battery voltage"
+    ::= 35
+	
+log_Overload TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Overload"
+    ::= 36
+	
+log_EndAlarm_Overload TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Overload"
+    ::= 37		
+	
+log_FanFailure TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Fan failure"
+    ::= 38
+	
+log_EndAlarm_FanFailure TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Fan failure"
+    ::= 39			
+	
+log_Epoenabled TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "EPO enabled (active)"
+    ::= 40
+	
+log_EndAlarm_Epoenabled TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm EPO enabled (active)"
+    ::= 41		
+	
+log_TurnOnAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Turn on abnormal"
+    ::= 42
+	
+log_EndAlarm_TurnOnAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Turn on abnormal"
+    ::= 43	
+	
+log_Overheat TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Over temperature alarm"
+    ::= 44
+	
+log_EndAlarm_Overheat TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Over temperature"
+    ::= 45	
+	
+log_ChargerAlarm TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Charger alarm"
+    ::= 46
+	
+log_EndAlarm_ChargerAlarm TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Charger"
+    ::= 47		
+	
+log_RemoteShutdown TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Remote shutdown"
+    ::= 48
+	
+log_EndAlarm_RemoteShutdown TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Remote shutdown"
+    ::= 49	
+	
+log_InputFuse TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Input fuse not working "
+    ::= 50
+	
+log_EndAlarm_InputFuse TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Input fuse not working"
+    ::= 51		
+	
+log_InputFuseL1 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "L1 input fuse not working"
+    ::= 52
+	
+log_EndAlarm_InputFuseL1 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm L1 input fuse not working"
+    ::= 53		
+	
+log_InputFuseL2 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "L2 input fuse not working"
+    ::= 54
+	
+log_EndAlarm_InputFuseL2 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm L2 input fuse not working"
+    ::= 55	
+	
+log_InputFuseL3 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "L3 input fuse not working"
+    ::= 56
+	
+log_EndAlarm_InputFuseL3 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm L3 input fuse not working"
+    ::= 57	
+	
+log_PfcPositiveAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Positive PFC abnormal"
+    ::= 58
+	
+log_EndAlarm_PfcPositiveAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Positive PFC abnormal"
+    ::= 59		
+	
+log_PfcPositiveAbnormalL1 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Positive PFC abnormal in L1"
+    ::= 60
+	
+log_EndAlarm_PfcPositiveAbnormalL1 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Positive PFC abnormal in L1"
+    ::= 61		
+	
+log_PfcNegativeAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Negative PFC abnormal"
+    ::= 62
+	
+log_EndAlarm_PfcNegativeAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Negative PFC abnormal"
+    ::= 63		
+	
+log_PfcNegativeAbnormalL1 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Negative PFC abnormal in L1"
+    ::= 64
+	
+log_EndAlarm_PfcNegativeAbnormalL1 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Negative PFC abnormal in L1"
+    ::= 65		
+	
+log_PfcPositiveAbnormalL2 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Positive PFC abnormal in L2"
+    ::= 66
+	
+log_EndAlarm_PfcPositiveAbnormalL2 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Positive PFC abnormal in L2"
+    ::= 67		
+	
+log_PfcNegativeAbnormalL2 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Negative PFC abnormal in L2"
+    ::= 68
+	
+log_EndAlarm_PfcNegativeAbnormalL2 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Negative PFC abnormal in L2"
+    ::= 69		
+	
+log_PfcPositiveAbnormalL3 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Positive PFC abnormal in L3"
+    ::= 70
+	
+log_EndAlarm_PfcPositiveAbnormalL3 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Positive PFC abnormal in L3"
+    ::= 71		
+	
+log_PfcNegativeAbnormalL3 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Negative PFC abnormal in L3"
+    ::= 72
+	
+log_EndAlarm_PfcNegativeAbnormalL3 TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Negative PFC abnormal in L3"
+    ::= 73		
+	
+log_CommunicationBusAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Abnormal in CAN-bus communication"
+    ::= 74
+	
+log_EndAlarm_CommunicationBusAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Abnormal in CAN-bus communication"
+    ::= 75		
+	
+log_SynchronousCircuitAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Abnormal in synchronous signal circuit"
+    ::= 76
+	
+log_EndAlarm_SynchronousCircuitAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Abnormal in synchronous signal circuit"
+    ::= 77		
+	
+log_SynchronousSignalAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Abnormal in synchronous pulse signal circuit"
+    ::= 78
+	
+log_EndAlarm_SynchronousSignalAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Abnormal in synchronous pulse signal circuit"
+    ::= 79			
+	
+log_HostCircuitAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Abnormal in host signal circuit"
+    ::= 80
+	
+log_EndAlarm_HostCircuitAbnormal TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Abnormal in host signal circuit"
+    ::= 81		
+	
+log_MaleParallelConnector TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Male connector of parallel cable not connected well"
+    ::= 82
+	
+log_EndAlarm_MaleParallelConnector TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Male connector of parallel cable not connected well"
+    ::= 83		
+	
+log_FemaleParallelConnector TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Female connector of parallel cable not connected well"
+    ::= 84
+	
+log_EndAlarm_FemaleParallelConnector TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Female connector of parallel cable not connected well"
+    ::= 85		
+	
+log_ParallelCable TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Parallel cable not connected well"
+    ::= 86
+	
+log_EndAlarm_ParallelCable TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Parallel cable not connected well"
+    ::= 87		
+	
+log_ParallelBatteryConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery connection not consistent in parallel systems"
+    ::= 88
+	
+log_EndAlarm_ParallelBatteryConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Battery connection not consistent in parallel systems"
+    ::= 89				
+	
+log_ParallelLineConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "AC connection not consistent in parallel systems"
+    ::= 90
+	
+log_EndAlarm_ParallelLineConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm AC connection not consistent in parallel systems"
+    ::= 91		
+	
+log_ParallelBypassConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bypass connection not consistent in parallel systems"
+    ::= 92
+	
+log_EndAlarm_ParallelBypassConnection TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Bypass connection not consistent in parallel systems"
+    ::= 93
+	
+log_ParallelUPSModelTypes TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS model types not consistent in parallel systems"
+    ::= 94
+	
+log_EndAlarm_ParallelUPSModelTypes TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Model UPS types not consistent in parallel systems"
+    ::= 95
+	
+log_ParallelRatingPpowers TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Rating powers of UPSs not consistent in parallel systems"
+    ::= 96
+	
+log_EndAlarm_ParallelRatingPpowers TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Rating powers of UPSs not consistent in parallel systems"
+    ::= 97	
+	
+log_ParallelAutoRestartSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Auto restart setting not consistent in parallel systems"
+    ::= 98
+	
+log_EndAlarm_ParallelAutoRestartSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Auto restart setting not consistent in parallel systems"
+    ::= 99		
+	
+log_ParallelBypassSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bypass setting not consistent in parallel systems"
+    ::= 100
+	
+log_EndAlarm_ParallelBypassSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Bypass setting not consistent in parallel systems"
+    ::= 101
+	
+log_ParallelBatterySetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery protection setting not consistent in parallel systems"
+    ::= 102
+	
+log_EndAlarm_ParallelBatterySetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Battery protection setting not consistent in parallel systems"
+    ::= 103	
+	
+log_ParallelBatteryDetectionSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery detection setting not consistent in parallel systems"
+    ::= 104
+	
+log_EndAlarm_ParallelBatteryDetectionSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Battery detection setting not consistent in parallel systems"
+    ::= 105	
+	
+log_ParallelBypassNotAllowedSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bypass not allowed setting not consistent in parallel systems"
+    ::= 106
+	
+log_EndAlarm_ParallelBypassNotAllowedSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Bypass not allowed setting not consistent in parallel systems"
+    ::= 107		
+	
+log_ParallelConverterSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Converter setting not consistent in parallel systems"
+    ::= 108
+	
+log_EndAlarm_ParallelConverterSetting TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Converter setting not consistent in parallel systems"
+    ::= 109		
+	
+log_ParallelBypassHighFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "High level loss point for frequency in bypass mode not consistent in parallel systems"
+    ::= 110
+	
+log_EndAlarm_ParallelBypassHighFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm High level loss point for frequency in bypass mode not consistent in parallel systems"
+    ::= 111			
+	
+log_ParallelBypassLowFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Low level loss point for frequency in bypass mode not consistent in parallel systems"
+    ::= 112
+	
+log_EndAlarm_ParallelBypassLowFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Low level loss point for frequency in bypass mode not consistent in parallel systems"
+    ::= 113		
+	
+log_ParallelBypassHighVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "High level loss point for voltage in bypass mode not consistent in parallel systems"
+    ::= 114
+	
+log_EndAlarm_ParallelBypassHighVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm High level loss point for voltage in bypass mode not consistent in parallel systems"
+    ::= 115		
+	
+log_ParallelBypassLowVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Low level loss point for voltage in bypass mode not consistent in parallel systems"
+    ::= 116
+	
+log_EndAlarm_ParallelBypassLowVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Low level loss point for voltage in bypass mode not consistent in parallel systems"
+    ::= 117		
+	
+log_ParallelACHighFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "High level loss point for frequency in AC mode not consistent in parallel systems"
+    ::= 118
+	
+log_EndAlarm_ParallelACHighFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm High level loss point for frequency in AC mode not consistent in parallel systems"
+    ::= 119		
+	
+log_ParallelACLowFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Low level loss point for frequency in AC mode not consistent in parallel systems"
+    ::= 120
+	
+log_EndAlarm_ParallelACLowFrequency TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Low level loss point for frequency in AC mode not consistent in parallel systems"
+    ::= 121	
+	
+log_ParallelACHighVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "High level loss point for voltage in AC mode not consistent in parallel systems"
+    ::= 122
+	
+log_EndAlarm_ParallelACHighVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm High level loss point for voltage in AC mode not consistent in parallel systems"
+    ::= 123		
+	
+log_ParallelACLowVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Low level loss point for voltage in AC mode not consistent in parallel systems"
+    ::= 124
+	
+log_EndAlarm_ParallelACLowVoltage TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Low level loss point for voltage in AC mode not consistent in parallel systems"
+    ::= 125	
+	
+log_BypassLock TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Locked in bypass mode after 3 consecutive overloads within 30 min"
+    ::= 126
+	
+log_EndAlarm_BypassLock TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Locked in bypass mode after 3 consecutive overloads within 30 min"
+    ::= 127		
+	
+log_ACInputUnbalance TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Three-phase AC input current unbalance"
+    ::= 128
+	
+log_EndAlarm_ACInputUnbalance TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Three-phase AC input current unbalance"
+    ::= 129
+	
+log_BatteryModeInputUnbalance TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Three-phase input current unbalance detected in battery mode"
+    ::= 130
+	
+log_EndAlarm_BatteryModeInputUnbalance TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Three-phase input current unbalance detected in battery mode"
+    ::= 131
+	
+log_InverterUnbalance TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter inter-current unbalance"
+    ::= 132
+	
+log_EndAlarm_InverterUnbalance TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Inverter inter-current unbalance"
+    ::= 133	
+	
+log_COutputPreAlarm  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Controlled output cut off pre-alarm"
+    ::= 134
+	
+log_EndAlarm_COutputPreAlarm TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm Controlled output cut off pre-alarm"
+    ::= 135	
+	
+log_SwitchCoverOpened  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "The cover of maintain switch is open"
+    ::= 136
+	
+log_EndAlarm_SwitchCoverOpened  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm The cover of maintain switch is open"
+    ::= 137	
+	
+log_UtilityVoltageUnbalanced  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "The Utility voltage is extremely unbalanced"
+    ::= 138
+	
+log_EndAlarm_UtilityVoltageUnbalanced  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm The Utility voltage is extremely unbalanced"
+    ::= 139	
+	
+log_BypassUnstable  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "The bypass is unstable"
+    ::= 140
+	
+log_EndAlarm_BypassUnstable  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End alarm The bypass is unstable"
+    ::= 141
+	
+log_BusStartFail  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bus start fail alarm"
+    ::= 142
+	
+log_BusOverVoltage  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bus over voltage alarm"
+    ::= 143	
+	
+log_BusUnderVoltage  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bus under voltage alarm"
+    ::= 144
+	
+log_BusUnbalanceVoltage  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bus voltage unbalance"
+    ::= 145
+	
+log_BusShort  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Bus short"
+    ::= 146		
+	
+log_PfcOverCurrent  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "PFC over current"
+    ::= 147	
+	
+log_InverterSoftStartFail  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter soft start fail"
+    ::= 148
+	
+log_InverterVoltageHigh  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter voltage high"
+    ::= 149	
+	
+log_InverterVoltageLow  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter voltage low"
+    ::= 150	
+	
+log_InverterOutputShorted  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter output shorted"
+    ::= 151	
+	
+log_InverterL1OutputShorted  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phase L1 output shorted"
+    ::= 152		
+	
+log_InverterL2OutputShorted  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phase L2 output shorted"
+    ::= 153	
+	
+log_InverterL3OutputShorted  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phase L3 output shorted"
+    ::= 154	
+	
+log_InverterL1L2OutputShorted  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phases L1-L2 shorted"
+    ::= 155			
+	
+log_InverterL2L3OutputShorted  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phases L2-L3 shorted"
+    ::= 156		
+	
+log_InverterL3L1OutputShorted  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phases L3-L1 shorted"
+    ::= 157	
+	
+log_InverterOutputNegativePower  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter output negative power"
+    ::= 158	
+	
+log_InverterOutputL1NegativePower  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phase L1 negative power"
+    ::= 159		
+	
+log_InverterOutputL2NegativePower  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phase L2 negative power"
+    ::= 160	
+	
+log_InverterOutputL3NegativePower  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter phase L3 negative power"
+    ::= 161		
+	
+log_BatterySCRfault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery SCR fault"
+    ::= 162			
+	
+log_LineSCRfault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Line SCR fault"
+    ::= 163	
+	
+log_InverterRelayOpenFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter relay open fault"
+    ::= 164	
+	
+log_InverterRelayShortFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Inverter relay short fault"
+    ::= 165		
+	
+log_WiringFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Wiring fault"
+    ::= 166			
+	
+log_BatteryReverseFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery reverse fault"
+    ::= 167	
+	
+log_BatteryVoltageTooHigh  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery voltage too high"
+    ::= 168	
+	
+log_BatteryVoltageTooLow  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Battery voltage too low"
+    ::= 169	
+	
+log_CANcommunicationFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "CAN communication fault"
+    ::= 170
+	
+log_HostLineFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Host line fault"
+    ::= 171	
+	
+log_SynchroLineFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Synchronization line fault"
+    ::= 172	
+	
+log_SynchroPulseLineFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Synchronization pulse line fault"
+    ::= 173	
+	
+log_ParallelCommunicationLineLoss  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Parallel communication line loss"
+    ::= 174	
+	
+log_OutputCircuitFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Output circuit fault"
+    ::= 175	
+	
+log_OverheatFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Over temperature"
+    ::= 176	
+	
+log_CPUcommunicationFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "CPU communication fault"
+    ::= 177	
+	
+log_OverloadFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Overload fault"
+    ::= 178
+	
+log_FansFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Fans fault"
+    ::= 179	
+	
+log_ChargerFault  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Charger fault"
+    ::= 180
+	
+log_COutputOff  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Controlled output turn off"
+    ::= 181
+	
+log_COutputOn  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Controlled output turn on"
+    ::= 182	
+	
+log_UPSHighTemperature  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS temperature sensor: high temperature value"
+    ::= 183		
+	
+log_UPSLowTemperature  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS temperature sensor: low temperature value"
+    ::= 184	
+
+log_UPSNormalTemperature  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "UPS temperature sensor: noraml temperature value"
+    ::= 185			
+
+log_BatteryReplace  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "UPS battery need to be replaced"
+    ::= 186	
+
+log_EndAlarm_BatteryReplace   TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "End Alarm: UPS battery need to be replaced"
+    ::= 187	
+
+log_ROMError  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "UPS ROM Error"
+    ::= 188	
+
+log_EndAlarm_ROMError  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "End Alarm: UPS ROM Error"
+    ::= 189
+
+log_UPSCommandBuzzerOff TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Buzzer Off sended to UPS"
+    ::= 190
+
+log_UPSCommandBuzzerOn TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Buzzer On sended to UPS"
+    ::= 191
+
+log_BatteryDischarged TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "UPS battery discharged (capacity lower 8 Ah)"
+    ::= 192		
+	
+log_TempSensDisconnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Temperature sensor disconnected"
+    ::= 200		
+	
+log_TempSensConnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Temperature sensor connected"
+    ::= 201		
+	
+log_TempSensNormalTemperature  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Temperature sensor: noraml temperature value"
+    ::= 202		
+	
+log_TempSensHighTemperature  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Temperature sensor: high temperature value"
+    ::= 203		
+	
+log_TempSensLowTemperature  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Temperature sensor: low temperature value"
+    ::= 204	
+	
+log_HumSensHumidityDisconnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor disconnected"
+    ::= 205		
+	
+log_HumSensHumidityConnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor connected"
+    ::= 206		
+	
+log_HumSensNormalHumidity TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity  sensor: noraml humidity value"
+    ::= 207	
+	
+log_TempSensHighHumidity  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor: high humidity value"
+    ::= 208		
+	
+log_TempSensLowHumidity  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor: low humidity value"
+    ::= 209
+		
+log_HumSensTemperatureDisconnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor (temp.) disconnected"
+    ::= 210	
+	
+log_HumSensTemperatureConnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor(temp.) connected"
+    ::= 211		
+	
+log_HumSensNormalTemperature TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity  sensor: noraml temperature value"
+    ::= 212
+	
+log_HumSensHighTemperature TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor: high temperature value"
+    ::= 213	
+	
+log_HumSensLowTemperature TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Humidity sensor: low temperature value"
+    ::= 214
+	
+log_ModuleMDS4Disconnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4 disconnected"
+    ::= 215
+	
+log_ModuleMDS4Connected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4 connected"
+    ::= 216		
+	
+log_MDS4Input1Normal  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 1 - normal state"
+    ::= 217			
+	
+log_MDS4Input2Normal  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 2 - normal state"
+    ::= 218			
+	
+log_MDS4Input3Normal  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 3 - normal state"
+    ::= 219			
+	
+log_MDS4Input4Normal  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 4 - normal state"
+    ::= 220		
+	
+log_MDS4Input1Alarm  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 1 - alarm state"
+    ::= 221		
+	
+log_MDS4Input2Alarm  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 2 - alarm state"
+    ::= 222
+	
+log_MDS4Input3Alarm  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 3 - alarm state"
+    ::= 223	
+	
+log_MDS4Input4Alarm  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MDS4: discrete input 4 - alarm state"
+    ::= 224
+	
+log_ModuleMRS4Disconnected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MRS4 disconnected"
+    ::= 225
+	
+log_ModuleMRS4Connected  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "Module MRS4 connected"
+    ::= 226	
+
+log_UPSCommandShutdownRestore TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Shutdown/Restore sended to UPS"
+    ::= 228
+
+log_UPSCommandRestart TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Restart sended to UPS"
+    ::= 229
+
+log_UPSCommandOff TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Output off sended to UPS"
+    ::= 230	
+
+log_UPSCommandOn TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Output on sended to UPS"
+    ::= 231	
+
+log_UPSCommandCoutputOff TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Coltrolled Output off sended to UPS"
+    ::= 232	
+
+log_UPSCommandCoutputOn TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Coltrolled Output on sended to UPS"
+    ::= 233	
+
+log_UPSCommand10sTest TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command 10seconds Test sended to UPS"
+    ::= 234	
+
+log_UPSCommandTestToDischarge TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Test to discharge sended to UPS"
+    ::= 235
+
+log_UPSCommandTestforTime TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Test for time sended to UPS"
+    ::= 236	
+
+log_UPSCommandResetTest TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Reset Test sended to UPS"
+    ::= 237
+	
+log_InventoryParametersChanged  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Inventory data changed"
+    ::= 238	
+	
+log_SensorsParametersChanged  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Sensors parameters changed"
+    ::= 239	
+	
+log_UPSparametersChanged  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: UPS parameters changed"
+    ::= 240
+	
+log_SNMPConfigChanged  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: SNMP Configuration changed"
+    ::= 241			
+	
+log_TestEmailSent  TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Test Email message sent"
+    ::= 242
+	
+log_TestEmailError TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Test Email message error"
+    ::= 243	
+	
+log_SysTimeConfigChanged TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: System time Configuration changed"
+    ::= 244
+	
+log_SNTPsysTimeUpdated TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Time updated with SNTP server"
+    ::= 245
+	
+log_NetworkConfigChanged TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Network Configuration changed"
+    ::= 246
+	
+log_SecurityConfigChanged TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Name, Password changed"
+    ::= 247
+	
+log_DefaultConfig TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Reset parameters to defaults"
+    ::= 248
+	
+log_LogClear TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Log Clear"
+    ::= 249	
+	
+log_WEBtelPowerON TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION
+            "WEBtel: Power on"
+    ::= 250	
+
+log_UPSCommandResetToDefaults TRAP-TYPE
+    ENTERPRISE ats-traps
+    VARIABLES { trapsText, trapsLevel }
+    DESCRIPTION 
+            "Command Reset To Defaults sended to UPS"
+    ::= 251
+
+END

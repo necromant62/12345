@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>5.4</version>
+    <version>5.0</version>
     <date>2026-09-07T12:00:00Z</date>
     <groups>
         <group>
-            <uuid>f34fd6a67e355832afa8728ccf75405f</uuid>
             <name>Templates/Power</name>
         </group>
     </groups>
     <templates>
         <template>
-            <uuid>3475ef1edff557cb96d2814b003ae015</uuid>
             <template>UPS WEBtel II ES AUX SNMP</template>
             <name>UPS WEBtel II ES AUX SNMP</name>
             <description>Шаблон SNMP для WEB/SNMP-адаптера АТС-КОНВЕРС WEBtel II ES AUX (ИБП EcoPower / OnePower Pro).
 
-Формат: Zabbix 5.4 XML.
+Формат: Zabbix 5.0 XML (подходит для 5.0.8).
 Протокол адаптера: SNMP v1, enterprise OID 1.3.6.1.4.1.22138.1.10.
-Источник OID: руководство КСДП.00080-10, таблица 16.
+Источник OID: файл WEBtel_II_ES_AUX.mib.
 
 На узле создайте SNMP-интерфейс версии SNMPv1 (адаптер не поддерживает v2c/v3) и community, настроенный на странице SNMP адаптера (по умолчанию обычно public).
 
@@ -28,9 +26,46 @@
                     <name>Templates/Power</name>
                 </group>
             </groups>
+            <applications>
+                <application>
+                    <name>WEBtel Battery</name>
+                </application>
+                <application>
+                    <name>WEBtel Bypass</name>
+                </application>
+                <application>
+                    <name>WEBtel Discrete inputs</name>
+                </application>
+                <application>
+                    <name>WEBtel Identity</name>
+                </application>
+                <application>
+                    <name>WEBtel Input</name>
+                </application>
+                <application>
+                    <name>WEBtel Internal</name>
+                </application>
+                <application>
+                    <name>WEBtel Output</name>
+                </application>
+                <application>
+                    <name>WEBtel Ratings</name>
+                </application>
+                <application>
+                    <name>WEBtel Relays</name>
+                </application>
+                <application>
+                    <name>WEBtel Sensors</name>
+                </application>
+                <application>
+                    <name>WEBtel Status</name>
+                </application>
+                <application>
+                    <name>WEBtel System</name>
+                </application>
+            </applications>
             <items>
                 <item>
-                    <uuid>fc428528fd6e554b8edf82af26548531</uuid>
                     <name>Описание устройства (sysDescr)</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.2.1.1.1.0</snmp_oid>
@@ -43,20 +78,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>system</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel System</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>2eab54e5e74d5ba787fc640522b9a052</uuid>
                     <name>Время работы SNMP-агента (sysUpTime)</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.2.1.1.3.0</snmp_oid>
@@ -64,15 +95,13 @@
                     <delay>1m</delay>
                     <units>uptime</units>
                     <description>sysUpTime.0 — время работы SNMP-агента адаптера.</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>system</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel System</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>2588f5589e615f39b1e41d519e699ee4</uuid>
                     <name>Имя устройства (sysName)</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.2.1.1.5.0</snmp_oid>
@@ -86,20 +115,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>system</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel System</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>2837baa5c92355599eb50da54b245fe5</uuid>
                     <name>Расположение адаптера (sysLocation)</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.2.1.1.6.0</snmp_oid>
@@ -113,20 +138,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>system</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel System</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>9b6f90c613875b06b22f64d5ac4e29ba</uuid>
                     <name>Статус подключения WEBtel к ИБП</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.1.1.0</snmp_oid>
@@ -136,16 +157,14 @@
                     <valuemap>
                         <name>WEBtel UPS connection</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>status</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Status</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>f3c176c9c52c5db989d53564cb576781</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.connected)=0</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.connected.last()}=0</expression>
                             <name>WEBtel {HOST.NAME}: нет связи адаптера с ИБП</name>
                             <description>Адаптер WEBtel II ES AUX не получает данные от ИБП.</description>
                             <priority>HIGH</priority>
@@ -154,7 +173,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>7417d80412755febb549e206c49ec601</uuid>
                     <name>Режим работы ИБП</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.1.2.0</snmp_oid>
@@ -164,39 +182,34 @@
                     <valuemap>
                         <name>WEBtel UPS mode</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>status</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Status</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>3589ecae14f253949017f20dda61460d</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.mode)=4</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.mode.last()}=4</expression>
                             <name>WEBtel {HOST.NAME}: ИБП в автономном режиме (батарея)</name>
                             <description>ИБП питает нагрузку от батареи.</description>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
                         </trigger>
                         <trigger>
-                            <uuid>1063b314dd2b5d0788b260761de2139c</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.mode)=2</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.mode.last()}=2</expression>
                             <name>WEBtel {HOST.NAME}: ИБП на встроенной обводной цепи</name>
                             <description>Нагрузка питается по bypass.</description>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
                         </trigger>
                         <trigger>
-                            <uuid>45d8b6d3f633525489697fcfb807d93b</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.mode)=6</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.mode.last()}=6</expression>
                             <name>WEBtel {HOST.NAME}: аварийный режим ИБП</name>
                             <priority>DISASTER</priority>
                             <manual_close>YES</manual_close>
                         </trigger>
                         <trigger>
-                            <uuid>9ca56e28a82855b4b2d984ab90f28f2a</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.mode)=9</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.mode.last()}=9</expression>
                             <name>WEBtel {HOST.NAME}: ИБП выключен</name>
                             <priority>DISASTER</priority>
                             <manual_close>YES</manual_close>
@@ -204,7 +217,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>43d100edcc035788bf8ec2d89f59c38a</uuid>
                     <name>Модель ИБП</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.1.0</snmp_oid>
@@ -218,20 +230,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>identity</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Identity</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>6de20ddae425512fb3ea86ab125f82e1</uuid>
                     <name>Номинальная полная мощность</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.2.0</snmp_oid>
@@ -242,20 +250,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>ratings</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Ratings</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>7ed41df274075e0fa58c6095bfff8b55</uuid>
                     <name>Коэффициент мощности</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.3.0</snmp_oid>
@@ -266,20 +270,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>ratings</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Ratings</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>9a64f6628109563c8bc3a83c84bcc2f3</uuid>
                     <name>Номинальное входное напряжение</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.4.0</snmp_oid>
@@ -290,20 +290,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>ratings</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Ratings</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>590745be21e35d68be648689d14592a1</uuid>
                     <name>Номинальное выходное напряжение</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.5.0</snmp_oid>
@@ -314,20 +310,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>ratings</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Ratings</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>ec6500ca3ed2582893e3b719ff494726</uuid>
                     <name>Номинальный выходной ток</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.6.0</snmp_oid>
@@ -338,20 +330,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>ratings</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Ratings</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>d4e57849728f5ef3baafc6b435cb10af</uuid>
                     <name>Номинальная частота выхода</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.7.0</snmp_oid>
@@ -363,26 +351,20 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>ratings</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Ratings</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>b43e4a5450755e68846b46ca669be8ac</uuid>
                     <name>Номинальное напряжение батареи</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.2.8.0</snmp_oid>
@@ -394,26 +376,20 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>ratings</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Ratings</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>7f51b1b93c345ec19c8efb36837e7c3c</uuid>
                     <name>Входное напряжение L1 / однофазное</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.1.1.0</snmp_oid>
@@ -425,20 +401,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>input</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Input</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>535437282b6857b8a403a54ed78954f8</uuid>
                     <name>Входное напряжение L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.1.2.0</snmp_oid>
@@ -450,24 +422,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>input</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Input</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>6ac5a1e8dc635673a744f16bdb386385</uuid>
                     <name>Входное напряжение L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.1.3.0</snmp_oid>
@@ -479,24 +443,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>input</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Input</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>50f4a4a1fc8a505b8a02e058393a3a65</uuid>
                     <name>Входное линейное напряжение L1-L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.1.4.0</snmp_oid>
@@ -508,24 +464,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>input</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Input</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>33d105be664f5be886306ee7e7427225</uuid>
                     <name>Входное линейное напряжение L2-L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.1.5.0</snmp_oid>
@@ -537,24 +485,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>input</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Input</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>335e0c603c935ae0a839ec065ec9737a</uuid>
                     <name>Входное линейное напряжение L3-L1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.1.6.0</snmp_oid>
@@ -566,24 +506,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>input</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Input</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>8f41ff7bbb1c56148550e62bb3cf10ce</uuid>
                     <name>Частота входного напряжения</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.1.7.0</snmp_oid>
@@ -595,20 +527,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>input</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Input</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>d79e070b2d095d3d9070a6edf2380e69</uuid>
                     <name>Напряжение bypass L1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.2.1.0</snmp_oid>
@@ -620,24 +548,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>bypass</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Bypass</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>3cb18362eace5b888cd26698340b56d1</uuid>
                     <name>Напряжение bypass L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.2.2.0</snmp_oid>
@@ -649,24 +569,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>bypass</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Bypass</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>72d5a4e5286b5e69aa21e5dab6b77913</uuid>
                     <name>Напряжение bypass L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.2.3.0</snmp_oid>
@@ -678,24 +590,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>bypass</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Bypass</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>14d12510246e5adb8ed7f61d6c47d039</uuid>
                     <name>Линейное напряжение bypass L1-L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.2.4.0</snmp_oid>
@@ -707,24 +611,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>bypass</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Bypass</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>db65e026f0105986be34542c0dbfacf9</uuid>
                     <name>Линейное напряжение bypass L2-L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.2.5.0</snmp_oid>
@@ -736,24 +632,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>bypass</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Bypass</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>b4fc3708973e5f3c978f20b0bd441a98</uuid>
                     <name>Линейное напряжение bypass L3-L1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.2.6.0</snmp_oid>
@@ -765,24 +653,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>bypass</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Bypass</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>3ff255502183573e95d8a18e8920bfe2</uuid>
                     <name>Частота напряжения bypass</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.2.7.0</snmp_oid>
@@ -794,20 +674,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>bypass</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Bypass</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>8a72af6174c7515b8efe48465dac1091</uuid>
                     <name>Выходное напряжение L1 / однофазное</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.1.0</snmp_oid>
@@ -819,20 +695,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>945680394b3e57a2aba8e1d06c9ff7dd</uuid>
                     <name>Выходное напряжение L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.2.0</snmp_oid>
@@ -844,24 +716,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>0afaee9f6c26527f8eddb01060cae587</uuid>
                     <name>Выходное напряжение L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.3.0</snmp_oid>
@@ -873,24 +737,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>d33934b65dde5380b07652d0d98d2926</uuid>
                     <name>Выходное линейное напряжение L1-L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.4.0</snmp_oid>
@@ -901,24 +757,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>d8e4cd8d44ba54dd909e6bc8c71156a5</uuid>
                     <name>Выходное линейное напряжение L2-L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.5.0</snmp_oid>
@@ -929,24 +777,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>31d3fda315ec52c9bd0cbe7fa7f58a4e</uuid>
                     <name>Выходное линейное напряжение L3-L1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.6.0</snmp_oid>
@@ -957,24 +797,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>ad347125711f5c689f015b70863dcc76</uuid>
                     <name>Частота выходного напряжения</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.7.0</snmp_oid>
@@ -986,20 +818,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>d7a19e0ffee15805bb558f130a5511f5</uuid>
                     <name>Выходной ток / сумма фаз L1-L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.8.0</snmp_oid>
@@ -1011,20 +839,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>ba05c96c3e225f4d8fec20dbf717e506</uuid>
                     <name>Выходной ток L1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.9.0</snmp_oid>
@@ -1035,24 +859,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>7b37123538e651998c526d6a840b8099</uuid>
                     <name>Выходной ток L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.10.0</snmp_oid>
@@ -1063,24 +879,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>47952ebda59b5280bbe1e9149b72ceb6</uuid>
                     <name>Выходной ток L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.11.0</snmp_oid>
@@ -1091,24 +899,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>8ae88d9adeaa593681e13d9bc39b993c</uuid>
                     <name>Нагрузка выхода / средняя по фазам</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.12.0</snmp_oid>
@@ -1116,23 +916,20 @@
                     <delay>30s</delay>
                     <units>%</units>
                     <description>Для 1ф и 3/1 — нагрузка; для 3/3 — среднее по фазам L1-L3.</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>703f63ab26e750e99d67bbf14652eae9</uuid>
-                            <expression>min(/UPS WEBtel II ES AUX SNMP/webtel.output.load,5m)&gt;{$UPS.LOAD.WARN}</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.output.load.min(5m)}&gt;{$UPS.LOAD.WARN}</expression>
                             <name>WEBtel {HOST.NAME}: высокая нагрузка ИБП ({ITEM.LASTVALUE1})</name>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
                         </trigger>
                         <trigger>
-                            <uuid>d08ce1a37ba154a883181865fb9ead01</uuid>
-                            <expression>min(/UPS WEBtel II ES AUX SNMP/webtel.output.load,5m)&gt;{$UPS.LOAD.CRIT}</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.output.load.min(5m)}&gt;{$UPS.LOAD.CRIT}</expression>
                             <name>WEBtel {HOST.NAME}: критическая нагрузка ИБП ({ITEM.LASTVALUE1})</name>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
@@ -1140,64 +937,45 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>8d8f5a14d2795ede9904d37c245691d9</uuid>
                     <name>Нагрузка фазы L1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.13.0</snmp_oid>
                     <key>webtel.output.load.l1</key>
                     <delay>30s</delay>
                     <units>%</units>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>6d193e251e275c71b90c5dc1ef33d228</uuid>
                     <name>Нагрузка фазы L2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.14.0</snmp_oid>
                     <key>webtel.output.load.l2</key>
                     <delay>30s</delay>
                     <units>%</units>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>ef22c26d79c1513b958ed6958318e3a0</uuid>
                     <name>Нагрузка фазы L3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.3.15.0</snmp_oid>
                     <key>webtel.output.load.l3</key>
                     <delay>30s</delay>
                     <units>%</units>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>output</value>
-                        </tag>
-                        <tag>
-                            <tag>phase</tag>
-                            <value>3</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Output</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>537654885fa251a889e924c37c213984</uuid>
                     <name>Температура ИБП</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.4.1.0</snmp_oid>
@@ -1209,28 +987,23 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>internal</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Internal</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>ab3905b241fb5165a003feb20354f3d7</uuid>
-                            <expression>avg(/UPS WEBtel II ES AUX SNMP/webtel.ups.temperature,5m)&gt;{$UPS.TEMP.WARN}</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.temperature.avg(5m)}&gt;{$UPS.TEMP.WARN}</expression>
                             <name>WEBtel {HOST.NAME}: повышенная температура ИБП ({ITEM.LASTVALUE1})</name>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
                         </trigger>
                         <trigger>
-                            <uuid>13383dcebc0e588b8e546d54d22dd948</uuid>
-                            <expression>avg(/UPS WEBtel II ES AUX SNMP/webtel.ups.temperature,5m)&gt;{$UPS.TEMP.CRIT}</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.temperature.avg(5m)}&gt;{$UPS.TEMP.CRIT}</expression>
                             <name>WEBtel {HOST.NAME}: перегрев ИБП ({ITEM.LASTVALUE1})</name>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
@@ -1238,7 +1011,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>293f0d90dacd55f3b1f733ef98c9e6f4</uuid>
                     <name>Напряжение батареи</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.4.2.0</snmp_oid>
@@ -1250,20 +1022,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>battery</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Battery</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>94a04bffa6ee54359562a81453df37e2</uuid>
                     <name>Прогноз времени автономии</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.4.3.0</snmp_oid>
@@ -1271,16 +1039,14 @@
                     <delay>1m</delay>
                     <units>m</units>
                     <description>Прогнозируемое время работы от батареи (мин.). Для однофазных ИБП 1–3 кВА.</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>battery</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Battery</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>8e3bb0cbcdc75ae5a2a7ed686861d468</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.mode)=4 and last(/UPS WEBtel II ES AUX SNMP/webtel.battery.runtime)&lt;{$UPS.RUNTIME.MIN}</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.mode.last()}=4 and {UPS WEBtel II ES AUX SNMP:webtel.battery.runtime.last()}&lt;{$UPS.RUNTIME.MIN}</expression>
                             <name>WEBtel {HOST.NAME}: малое время автономии ({ITEM.LASTVALUE1})</name>
                             <description>Срабатывает только в автономном режиме.</description>
                             <priority>HIGH</priority>
@@ -1289,7 +1055,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>0a45243a12e05780943108da95256f1b</uuid>
                     <name>Уровень заряда батареи</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.4.4.0</snmp_oid>
@@ -1297,16 +1062,14 @@
                     <delay>1m</delay>
                     <units>%</units>
                     <description>Текущий уровень заряда батареи (%).</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>battery</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Battery</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>5e26d6527288587fb380238546da486a</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.battery.charge)&lt;{$UPS.BATTERY.MIN}</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.battery.charge.last()}&lt;{$UPS.BATTERY.MIN}</expression>
                             <name>WEBtel {HOST.NAME}: низкий заряд батареи ({ITEM.LASTVALUE1})</name>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
@@ -1314,7 +1077,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>bfdc5e44a68f54ad8d94b2023d916c76</uuid>
                     <name>Предупреждения ИБП (upsWanrings)</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.4.5.0</snmp_oid>
@@ -1324,16 +1086,14 @@
                     <trends>0</trends>
                     <value_type>TEXT</value_type>
                     <description>В MIB объект upsWanrings — DisplayString (64 бита предупреждений как строка), не INTEGER. Расшифровка битов — таблица 17 руководства КСДП.00080-10.</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>status</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Status</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>676760d935e35e22aa8cb24fa887c22b</uuid>
-                            <expression>length(last(/UPS WEBtel II ES AUX SNMP/webtel.ups.warnings))&gt;0 and last(/UPS WEBtel II ES AUX SNMP/webtel.ups.warnings)&lt;&gt;&quot;0&quot; and last(/UPS WEBtel II ES AUX SNMP/webtel.ups.warnings)&lt;&gt;&quot;00&quot;</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.warnings.strlen()}&gt;0 and {UPS WEBtel II ES AUX SNMP:webtel.ups.warnings.last()}&lt;&gt;&quot;0&quot; and {UPS WEBtel II ES AUX SNMP:webtel.ups.warnings.last()}&lt;&gt;&quot;00&quot;</expression>
                             <name>WEBtel {HOST.NAME}: есть предупреждения ИБП ({ITEM.LASTVALUE1})</name>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
@@ -1341,7 +1101,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>11b0992bdbd0591198ed9c53425c7131</uuid>
                     <name>Код неисправности (аварии)</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.3.4.6.0</snmp_oid>
@@ -1351,16 +1110,14 @@
                     <valuemap>
                         <name>WEBtel UPS fault code</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>status</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Status</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>a7f23c3bc4ff595d9ff18c2a51a3fe2a</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.ups.fault.code)&lt;&gt;0</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.ups.fault.code.last()}&lt;&gt;0</expression>
                             <name>WEBtel {HOST.NAME}: авария ИБП, код {ITEM.LASTVALUE1}</name>
                             <priority>DISASTER</priority>
                             <manual_close>YES</manual_close>
@@ -1368,7 +1125,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>0b6f6335968d532c974bcb3be23d6708</uuid>
                     <name>Имя датчика TS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.1.1.0</snmp_oid>
@@ -1380,20 +1136,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>e9535f281d725ac8b3cc15324c3f6587</uuid>
                     <name>Температура датчика TS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.1.2.0</snmp_oid>
@@ -1405,20 +1157,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>5ac710fa87635f448ff622e503ad062f</uuid>
                     <name>Статус датчика TS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.1.3.0</snmp_oid>
@@ -1427,16 +1175,14 @@
                     <valuemap>
                         <name>WEBtel sensor status</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>b682699804ef51d29c737c64c25a4848</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.sensor.ts100d.status)=1 or last(/UPS WEBtel II ES AUX SNMP/webtel.sensor.ts100d.status)=2</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.sensor.ts100d.status.last()}=1 or {UPS WEBtel II ES AUX SNMP:webtel.sensor.ts100d.status.last()}=2</expression>
                             <name>WEBtel {HOST.NAME}: авария температуры TS-100D</name>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
@@ -1444,7 +1190,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>c4d6ca80902e5085910860bff3a661bf</uuid>
                     <name>Имя датчика влажности HTS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.2.1.0</snmp_oid>
@@ -1456,20 +1201,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>3f46a579537c56169608df88f950f90b</uuid>
                     <name>Влажность датчика HTS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.2.2.0</snmp_oid>
@@ -1481,20 +1222,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>7947cfb89b985b7dae4edf511f751437</uuid>
                     <name>Статус влажности HTS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.2.3.0</snmp_oid>
@@ -1503,16 +1240,14 @@
                     <valuemap>
                         <name>WEBtel sensor status</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>7d4ac5f02f9c5ca184fef67be6213a69</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.sensor.hts100d.humidity.status)=1 or last(/UPS WEBtel II ES AUX SNMP/webtel.sensor.hts100d.humidity.status)=2</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.sensor.hts100d.humidity.status.last()}=1 or {UPS WEBtel II ES AUX SNMP:webtel.sensor.hts100d.humidity.status.last()}=2</expression>
                             <name>WEBtel {HOST.NAME}: авария влажности HTS-100D</name>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
@@ -1520,7 +1255,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>64cebef9d1b358f6a4a25e1fd73f1a22</uuid>
                     <name>Имя датчика температуры HTS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.2.8.0</snmp_oid>
@@ -1532,20 +1266,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>3ecd5157d1d0551e9a857ee8d9c174ca</uuid>
                     <name>Температура датчика HTS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.2.9.0</snmp_oid>
@@ -1556,20 +1286,16 @@
                     <preprocessing>
                         <step>
                             <type>MULTIPLIER</type>
-                            <parameters>
-                                <parameter>0.1</parameter>
-                            </parameters>
+                            <params>0.1</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>64c02a46f5be5cb2934cac1e986c389c</uuid>
                     <name>Статус температуры HTS-100D</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.2.10.0</snmp_oid>
@@ -1578,16 +1304,14 @@
                     <valuemap>
                         <name>WEBtel sensor status</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>sensor</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Sensors</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>8198018088c850ba96169d5f3817cb5f</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.sensor.hts100d.temp.status)=1 or last(/UPS WEBtel II ES AUX SNMP/webtel.sensor.hts100d.temp.status)=2</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.sensor.hts100d.temp.status.last()}=1 or {UPS WEBtel II ES AUX SNMP:webtel.sensor.hts100d.temp.status.last()}=2</expression>
                             <name>WEBtel {HOST.NAME}: авария температуры HTS-100D</name>
                             <priority>WARNING</priority>
                             <manual_close>YES</manual_close>
@@ -1595,7 +1319,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>1eb9147aeafd5cd794faaa949363d91b</uuid>
                     <name>Имя дискретного входа 1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.2.0</snmp_oid>
@@ -1607,20 +1330,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>803ec59c184d568ebaecabe92a87c46b</uuid>
                     <name>Статус дискретного входа 1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.3.0</snmp_oid>
@@ -1630,16 +1349,14 @@
                     <valuemap>
                         <name>WEBtel discrete input</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>66899d72437d5c5e93716fc0d5023378</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.din1.status)=1</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.din1.status.last()}=1</expression>
                             <name>WEBtel {HOST.NAME}: авария дискретного входа 1</name>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
@@ -1647,7 +1364,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>a2a71c19a82755e1a3a08aece3dd71f8</uuid>
                     <name>Имя дискретного входа 2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.2.1</snmp_oid>
@@ -1659,20 +1375,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>934fab19fd5c53cfaadb5537f6d5f3f0</uuid>
                     <name>Статус дискретного входа 2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.3.1</snmp_oid>
@@ -1682,16 +1394,14 @@
                     <valuemap>
                         <name>WEBtel discrete input</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>0bb89c7edc525b338f36892929885b69</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.din2.status)=1</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.din2.status.last()}=1</expression>
                             <name>WEBtel {HOST.NAME}: авария дискретного входа 2</name>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
@@ -1699,7 +1409,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>4014010eedcd50f9a33c634d29292a0c</uuid>
                     <name>Имя дискретного входа 3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.2.2</snmp_oid>
@@ -1711,20 +1420,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>3dcd7ef991bb5a95b190bf829dc00d6e</uuid>
                     <name>Статус дискретного входа 3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.3.2</snmp_oid>
@@ -1734,16 +1439,14 @@
                     <valuemap>
                         <name>WEBtel discrete input</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>e234e785b9d253949ff82b932ef657d2</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.din3.status)=1</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.din3.status.last()}=1</expression>
                             <name>WEBtel {HOST.NAME}: авария дискретного входа 3</name>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
@@ -1751,7 +1454,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>a733c21e4c4b54149daad32a9b17f81f</uuid>
                     <name>Имя дискретного входа 4</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.2.3</snmp_oid>
@@ -1763,20 +1465,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>5499d6a9764b55349975c17782694b08</uuid>
                     <name>Статус дискретного входа 4</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.3.1.3.3</snmp_oid>
@@ -1786,16 +1484,14 @@
                     <valuemap>
                         <name>WEBtel discrete input</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>discrete</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Discrete inputs</name>
+                        </application>
+                    </applications>
                     <triggers>
                         <trigger>
-                            <uuid>ed1729e6d82a55d89ff9dcc495ef8f1a</uuid>
-                            <expression>last(/UPS WEBtel II ES AUX SNMP/webtel.din4.status)=1</expression>
+                            <expression>{UPS WEBtel II ES AUX SNMP:webtel.din4.status.last()}=1</expression>
                             <name>WEBtel {HOST.NAME}: авария дискретного входа 4</name>
                             <priority>HIGH</priority>
                             <manual_close>YES</manual_close>
@@ -1803,7 +1499,6 @@
                     </triggers>
                 </item>
                 <item>
-                    <uuid>725fe0533bf15a6ab6e2ddb965c8763d</uuid>
                     <name>Состояние релейного выхода 1</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.4.1.3.0</snmp_oid>
@@ -1813,15 +1508,13 @@
                     <valuemap>
                         <name>WEBtel relay state</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>relay</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Relays</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>f55f354e706b5a09a34182f8e5c8d9d2</uuid>
                     <name>Состояние релейного выхода 2</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.4.1.3.1</snmp_oid>
@@ -1831,15 +1524,13 @@
                     <valuemap>
                         <name>WEBtel relay state</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>relay</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Relays</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>9bc8e8c6522057969c42060596428cc3</uuid>
                     <name>Состояние релейного выхода 3</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.4.1.3.2</snmp_oid>
@@ -1849,15 +1540,13 @@
                     <valuemap>
                         <name>WEBtel relay state</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>relay</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Relays</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>0a9f78e662fd5451a4d53e53dc2174b1</uuid>
                     <name>Состояние релейного выхода 4</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.4.4.4.1.3.3</snmp_oid>
@@ -1867,15 +1556,13 @@
                     <valuemap>
                         <name>WEBtel relay state</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>relay</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Relays</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>24557b1479a759468bff56c86ed53003</uuid>
                     <name>Дата адаптера</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.5.1.0</snmp_oid>
@@ -1885,15 +1572,13 @@
                     <trends>0</trends>
                     <value_type>CHAR</value_type>
                     <description>Текущая дата адаптера в формате &quot;ДД.ММ.ГГ&quot;.</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>system</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel System</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>1b28f6fbd5e55d828b5abc65389463ce</uuid>
                     <name>Время адаптера</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.5.2.0</snmp_oid>
@@ -1903,15 +1588,13 @@
                     <trends>0</trends>
                     <value_type>CHAR</value_type>
                     <description>Текущее время адаптера в формате &quot;ЧЧ.ММ.СС&quot;.</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>system</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel System</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>d4914ad3f4c3548180ad428167e7a9a8</uuid>
                     <name>Текст SNMP-ловушки</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.7.1.0</snmp_oid>
@@ -1921,15 +1604,13 @@
                     <trends>0</trends>
                     <value_type>TEXT</value_type>
                     <description>Текст последней SNMP-ловушки (если адаптер отдаёт переменную по GET).</description>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>status</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Status</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>97d63e4625185c7eb1f3b006937bae2b</uuid>
                     <name>Важность SNMP-ловушки</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.7.2.0</snmp_oid>
@@ -1939,15 +1620,13 @@
                     <valuemap>
                         <name>WEBtel trap severity</name>
                     </valuemap>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>status</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Status</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>5e288645b04b512daebc4914d954cd31</uuid>
                     <name>Имя изделия / версия ПО адаптера</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.8.0</snmp_oid>
@@ -1960,20 +1639,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>identity</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Identity</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>a21d3a2d7af3521bace5d88db9869868</uuid>
                     <name>Заводской номер адаптера</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.9.0</snmp_oid>
@@ -1986,20 +1661,16 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>identity</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Identity</name>
+                        </application>
+                    </applications>
                 </item>
                 <item>
-                    <uuid>19ebcae0064556d988e84b6751b9970a</uuid>
                     <name>Заводской номер ИБП</name>
                     <type>SNMP_AGENT</type>
                     <snmp_oid>.1.3.6.1.4.1.22138.1.10.10.0</snmp_oid>
@@ -2012,17 +1683,14 @@
                     <preprocessing>
                         <step>
                             <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <parameters>
-                                <parameter>1d</parameter>
-                            </parameters>
+                            <params>1d</params>
                         </step>
                     </preprocessing>
-                    <tags>
-                        <tag>
-                            <tag>component</tag>
-                            <value>identity</value>
-                        </tag>
-                    </tags>
+                    <applications>
+                        <application>
+                            <name>WEBtel Identity</name>
+                        </application>
+                    </applications>
                 </item>
             </items>
             <tags>
@@ -2071,305 +1739,8 @@
                     <description>Минимальное время автономии в минутах (только в режиме батареи)</description>
                 </macro>
             </macros>
-            <valuemaps>
-                <valuemap>
-                    <uuid>a9fd9a69e9ad5e3c8ec578c4914d7f95</uuid>
-                    <name>WEBtel UPS connection</name>
-                    <mappings>
-                        <mapping>
-                            <value>0</value>
-                            <newvalue>Не подключен</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>1</value>
-                            <newvalue>Подключен</newvalue>
-                        </mapping>
-                    </mappings>
-                </valuemap>
-                <valuemap>
-                    <uuid>dff0ba7e51825011966d4db6119c3813</uuid>
-                    <name>WEBtel UPS mode</name>
-                    <mappings>
-                        <mapping>
-                            <value>0</value>
-                            <newvalue>Включен</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>1</value>
-                            <newvalue>Режим ожидания</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>2</value>
-                            <newvalue>Работа по встроенной обводной цепи</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>3</value>
-                            <newvalue>Дежурный режим</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>4</value>
-                            <newvalue>Автономный режим</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>5</value>
-                            <newvalue>Тестирование батареи</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>6</value>
-                            <newvalue>Аварийный режим</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>7</value>
-                            <newvalue>Режим экономии энергии</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>8</value>
-                            <newvalue>Режим преобразователя частоты</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>9</value>
-                            <newvalue>Выключен</newvalue>
-                        </mapping>
-                    </mappings>
-                </valuemap>
-                <valuemap>
-                    <uuid>6f3bc725647459baad5f4b55fdc157bf</uuid>
-                    <name>WEBtel sensor status</name>
-                    <mappings>
-                        <mapping>
-                            <value>0</value>
-                            <newvalue>В норме</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>1</value>
-                            <newvalue>Низкое значение</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>2</value>
-                            <newvalue>Высокое значение</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>3</value>
-                            <newvalue>Датчик отключен</newvalue>
-                        </mapping>
-                    </mappings>
-                </valuemap>
-                <valuemap>
-                    <uuid>c5d2a51f9b19527992bc0a2cb52ba0ca</uuid>
-                    <name>WEBtel discrete input</name>
-                    <mappings>
-                        <mapping>
-                            <value>0</value>
-                            <newvalue>Норма</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>1</value>
-                            <newvalue>Авария</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>3</value>
-                            <newvalue>Отключен</newvalue>
-                        </mapping>
-                    </mappings>
-                </valuemap>
-                <valuemap>
-                    <uuid>0f2ed05a586d536c9bacf696c691bc91</uuid>
-                    <name>WEBtel relay state</name>
-                    <mappings>
-                        <mapping>
-                            <value>0</value>
-                            <newvalue>Выключен</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>1</value>
-                            <newvalue>Включен</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>3</value>
-                            <newvalue>Отключен</newvalue>
-                        </mapping>
-                    </mappings>
-                </valuemap>
-                <valuemap>
-                    <uuid>99e664257cb95cef80e494d254e3f494</uuid>
-                    <name>WEBtel trap severity</name>
-                    <mappings>
-                        <mapping>
-                            <value>0</value>
-                            <newvalue>Извещение</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>1</value>
-                            <newvalue>Предупреждение</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>2</value>
-                            <newvalue>Авария</newvalue>
-                        </mapping>
-                    </mappings>
-                </valuemap>
-                <valuemap>
-                    <uuid>4c9e5551b7b25ab8b7002ff83fe2abf7</uuid>
-                    <name>WEBtel UPS fault code</name>
-                    <mappings>
-                        <mapping>
-                            <value>0</value>
-                            <newvalue>Нет аварии</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>1</value>
-                            <newvalue>Ошибка запуска внутренней шины</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>2</value>
-                            <newvalue>Недопустимое повышение напряжения на внутренней шине</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>3</value>
-                            <newvalue>Недопустимое понижение напряжения на внутренней шине</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>4</value>
-                            <newvalue>Нестабильное напряжение на внутренней шине</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>5</value>
-                            <newvalue>Короткое замыкание на внутренней шине</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>6</value>
-                            <newvalue>Перегрузка по току в ККМ</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>17</value>
-                            <newvalue>Программный сбой в инверторе</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>18</value>
-                            <newvalue>Недопустимое повышение выходного напряжения инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>19</value>
-                            <newvalue>Недопустимое понижение выходного напряжения инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>20</value>
-                            <newvalue>КЗ фазы L1 инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>21</value>
-                            <newvalue>КЗ фазы L2 инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>22</value>
-                            <newvalue>КЗ фазы L3 инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>23</value>
-                            <newvalue>КЗ L1 на L2 инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>24</value>
-                            <newvalue>КЗ L2 на L3 инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>25</value>
-                            <newvalue>КЗ L1 на L3 инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>26</value>
-                            <newvalue>Возвратная мощность фаза L1</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>27</value>
-                            <newvalue>Возвратная мощность фаза L2</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>28</value>
-                            <newvalue>Возвратная мощность фаза L3</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>33</value>
-                            <newvalue>Неисправность модуля SCR батареи</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>34</value>
-                            <newvalue>Неисправность модуля SCR входа</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>35</value>
-                            <newvalue>Реле инвертора не включается</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>36</value>
-                            <newvalue>Сваривание контактов реле инвертора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>37</value>
-                            <newvalue>Неисправность внутренней проводки</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>38</value>
-                            <newvalue>Неверная полярность батареи</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>39</value>
-                            <newvalue>Чрезмерно высокое напряжение батареи</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>40</value>
-                            <newvalue>Чрезмерно низкое напряжение батареи</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>49</value>
-                            <newvalue>Нарушение связи по CAN</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>50</value>
-                            <newvalue>Неисправность цепи управления</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>51</value>
-                            <newvalue>Неисправность цепи синхронизации</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>52</value>
-                            <newvalue>Неисправность формирователя синхроимпульсов</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>53</value>
-                            <newvalue>Нарушение связи</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>54</value>
-                            <newvalue>Неисправна выходная цепь</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>65</value>
-                            <newvalue>Отключение из-за перегрева</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>66</value>
-                            <newvalue>Нарушение связи с управляющим контроллером</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>67</value>
-                            <newvalue>Отключение из-за перегрузки</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>68</value>
-                            <newvalue>Отключение из-за неисправности вентилятора</newvalue>
-                        </mapping>
-                        <mapping>
-                            <value>69</value>
-                            <newvalue>Отключение из-за неисправности зарядного устройства</newvalue>
-                        </mapping>
-                    </mappings>
-                </valuemap>
-            </valuemaps>
             <graphs>
                 <graph>
-                    <uuid>ded8fc8cb15f5bbf9e804257698f18d1</uuid>
                     <name>WEBtel: напряжение входа и выхода</name>
                     <graph_items>
                         <graph_item>
@@ -2391,7 +1762,6 @@
                     </graph_items>
                 </graph>
                 <graph>
-                    <uuid>a19983ed3e555cd0a4e3b24956bb7b85</uuid>
                     <name>WEBtel: батарея</name>
                     <graph_items>
                         <graph_item>
@@ -2414,7 +1784,6 @@
                     </graph_items>
                 </graph>
                 <graph>
-                    <uuid>28b96a7cf8cc51339f1d902adef98cb4</uuid>
                     <name>WEBtel: нагрузка и ток</name>
                     <graph_items>
                         <graph_item>
@@ -2438,7 +1807,6 @@
                     </graph_items>
                 </graph>
                 <graph>
-                    <uuid>1f8029beb4bd552bb5afeecbb23659ca</uuid>
                     <name>WEBtel: температура</name>
                     <graph_items>
                         <graph_item>
@@ -2468,7 +1836,6 @@
                     </graph_items>
                 </graph>
                 <graph>
-                    <uuid>215a1f168be951369af3884f7ea5a93c</uuid>
                     <name>WEBtel: частоты</name>
                     <graph_items>
                         <graph_item>
@@ -2492,4 +1859,293 @@
             </graphs>
         </template>
     </templates>
+    <value_maps>
+        <value_map>
+            <name>WEBtel UPS connection</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Не подключен</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Подключен</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>WEBtel UPS mode</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Включен</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Режим ожидания</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>Работа по встроенной обводной цепи</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>Дежурный режим</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>Автономный режим</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>Тестирование батареи</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>Аварийный режим</newvalue>
+                </mapping>
+                <mapping>
+                    <value>7</value>
+                    <newvalue>Режим экономии энергии</newvalue>
+                </mapping>
+                <mapping>
+                    <value>8</value>
+                    <newvalue>Режим преобразователя частоты</newvalue>
+                </mapping>
+                <mapping>
+                    <value>9</value>
+                    <newvalue>Выключен</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>WEBtel sensor status</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>В норме</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Низкое значение</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>Высокое значение</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>Датчик отключен</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>WEBtel discrete input</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Норма</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Авария</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>Отключен</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>WEBtel relay state</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Выключен</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Включен</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>Отключен</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>WEBtel trap severity</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Извещение</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Предупреждение</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>Авария</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>WEBtel UPS fault code</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Нет аварии</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Ошибка запуска внутренней шины</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>Недопустимое повышение напряжения на внутренней шине</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>Недопустимое понижение напряжения на внутренней шине</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>Нестабильное напряжение на внутренней шине</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>Короткое замыкание на внутренней шине</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>Перегрузка по току в ККМ</newvalue>
+                </mapping>
+                <mapping>
+                    <value>17</value>
+                    <newvalue>Программный сбой в инверторе</newvalue>
+                </mapping>
+                <mapping>
+                    <value>18</value>
+                    <newvalue>Недопустимое повышение выходного напряжения инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>19</value>
+                    <newvalue>Недопустимое понижение выходного напряжения инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>20</value>
+                    <newvalue>КЗ фазы L1 инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>21</value>
+                    <newvalue>КЗ фазы L2 инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>22</value>
+                    <newvalue>КЗ фазы L3 инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>23</value>
+                    <newvalue>КЗ L1 на L2 инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>24</value>
+                    <newvalue>КЗ L2 на L3 инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>25</value>
+                    <newvalue>КЗ L1 на L3 инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>26</value>
+                    <newvalue>Возвратная мощность фаза L1</newvalue>
+                </mapping>
+                <mapping>
+                    <value>27</value>
+                    <newvalue>Возвратная мощность фаза L2</newvalue>
+                </mapping>
+                <mapping>
+                    <value>28</value>
+                    <newvalue>Возвратная мощность фаза L3</newvalue>
+                </mapping>
+                <mapping>
+                    <value>33</value>
+                    <newvalue>Неисправность модуля SCR батареи</newvalue>
+                </mapping>
+                <mapping>
+                    <value>34</value>
+                    <newvalue>Неисправность модуля SCR входа</newvalue>
+                </mapping>
+                <mapping>
+                    <value>35</value>
+                    <newvalue>Реле инвертора не включается</newvalue>
+                </mapping>
+                <mapping>
+                    <value>36</value>
+                    <newvalue>Сваривание контактов реле инвертора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>37</value>
+                    <newvalue>Неисправность внутренней проводки</newvalue>
+                </mapping>
+                <mapping>
+                    <value>38</value>
+                    <newvalue>Неверная полярность батареи</newvalue>
+                </mapping>
+                <mapping>
+                    <value>39</value>
+                    <newvalue>Чрезмерно высокое напряжение батареи</newvalue>
+                </mapping>
+                <mapping>
+                    <value>40</value>
+                    <newvalue>Чрезмерно низкое напряжение батареи</newvalue>
+                </mapping>
+                <mapping>
+                    <value>49</value>
+                    <newvalue>Нарушение связи по CAN</newvalue>
+                </mapping>
+                <mapping>
+                    <value>50</value>
+                    <newvalue>Неисправность цепи управления</newvalue>
+                </mapping>
+                <mapping>
+                    <value>51</value>
+                    <newvalue>Неисправность цепи синхронизации</newvalue>
+                </mapping>
+                <mapping>
+                    <value>52</value>
+                    <newvalue>Неисправность формирователя синхроимпульсов</newvalue>
+                </mapping>
+                <mapping>
+                    <value>53</value>
+                    <newvalue>Нарушение связи</newvalue>
+                </mapping>
+                <mapping>
+                    <value>54</value>
+                    <newvalue>Неисправна выходная цепь</newvalue>
+                </mapping>
+                <mapping>
+                    <value>65</value>
+                    <newvalue>Отключение из-за перегрева</newvalue>
+                </mapping>
+                <mapping>
+                    <value>66</value>
+                    <newvalue>Нарушение связи с управляющим контроллером</newvalue>
+                </mapping>
+                <mapping>
+                    <value>67</value>
+                    <newvalue>Отключение из-за перегрузки</newvalue>
+                </mapping>
+                <mapping>
+                    <value>68</value>
+                    <newvalue>Отключение из-за неисправности вентилятора</newvalue>
+                </mapping>
+                <mapping>
+                    <value>69</value>
+                    <newvalue>Отключение из-за неисправности зарядного устройства</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+    </value_maps>
 </zabbix_export>

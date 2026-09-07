@@ -3,7 +3,7 @@ UPS-WEBTEL-II-ES-AUX-MIB DEFINITIONS ::= BEGIN
 -- Reconstructed from ATS-CONVERS user manual KSDP.00080-10 table 16
 -- for WEB/SNMP adapter WEBtel II ES AUX.
 -- Enterprise number 22138 = ATS-KONVERS Ltd. (IANA PEN).
--- This MIB is for snmptranslate / documentation. Zabbix 5.4 cannot import MIB
+-- This MIB is for snmptranslate / documentation. Zabbix cannot import MIB
 -- files as templates; use the XML template in zabbix/.
 
 IMPORTS

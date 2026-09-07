@@ -1,26 +1,56 @@
 #!/usr/bin/env python3
-"""Generate Zabbix 5.4 XML template and SMIv2 MIB for WEBtel II ES AUX.
-
-OID tree is taken from ATS-CONVERS user manual КСДП.00080-10 (table 16):
-enterprise 22138 (ATS-KONVERS Ltd.), product webtel_ii_es_aux = .1.3.6.1.4.1.22138.1.10
-"""
+"""Generate Zabbix 5.0 XML template from WEBtel II ES AUX MIB."""
 
 from __future__ import annotations
 
-import uuid
+import re
 from pathlib import Path
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 
 ROOT = Path(__file__).resolve().parents[1]
-NS = uuid.UUID("22138000-5a54-4e54-a055-77656274656c")
 TPL = "UPS WEBtel II ES AUX SNMP"
 GROUP = "Templates/Power"
 DATE = "2026-09-07T12:00:00Z"
+ZBX_VERSION = "5.0"
+
+APP_BY_COMPONENT = {
+    "system": "WEBtel System",
+    "status": "WEBtel Status",
+    "identity": "WEBtel Identity",
+    "ratings": "WEBtel Ratings",
+    "input": "WEBtel Input",
+    "bypass": "WEBtel Bypass",
+    "output": "WEBtel Output",
+    "internal": "WEBtel Internal",
+    "battery": "WEBtel Battery",
+    "sensor": "WEBtel Sensors",
+    "discrete": "WEBtel Discrete inputs",
+    "relay": "WEBtel Relays",
+}
 
 
-def uid(*parts: str) -> str:
-    return uuid.uuid5(NS, "|".join(parts)).hex
+def app_name(tags: dict[str, str] | None) -> str:
+    return APP_BY_COMPONENT.get((tags or {}).get("component", "status"), "WEBtel Status")
+
+
+def to_classic_expr(expr: str) -> str:
+    """Convert 5.4 last(/host/key) expressions to 5.0 {host:key.last()} syntax."""
+    expr = re.sub(
+        r"length\(last\(/([^/]+)/([^)]+)\)\)",
+        r"{\1:\2.strlen()}",
+        expr,
+    )
+    expr = re.sub(
+        r"(min|avg|last)\(/([^/]+)/([^,)]+)(?:,([^)]+))?\)",
+        lambda m: (
+            f"{{{m.group(2)}:{m.group(3)}.{m.group(1)}({m.group(4)})}}"
+            if m.group(4)
+            else f"{{{m.group(2)}:{m.group(3)}.{m.group(1)}()}}"
+        ),
+        expr,
+    )
+    return expr
 
 
 def et_text(parent: Element, tag: str, text: str | None = None) -> Element:
@@ -43,11 +73,8 @@ def add_preprocessing(parent: Element, steps: list[dict]) -> None:
     for step in steps:
         s = SubElement(wrap, "step")
         et_text(s, "type", step["type"])
-        params = step.get("parameters")
-        if params:
-            pwrap = SubElement(s, "parameters")
-            for p in params:
-                et_text(pwrap, "parameter", p)
+        params = step.get("parameters") or []
+        et_text(s, "params", "\n".join(params))
 
 
 def add_valuemap_ref(parent: Element, name: str) -> None:
@@ -944,17 +971,15 @@ GRAPHS = [
 
 def build_xml(catalog: list[dict]) -> str:
     root = Element("zabbix_export")
-    et_text(root, "version", "5.4")
+    et_text(root, "version", ZBX_VERSION)
     et_text(root, "date", DATE)
 
     groups = SubElement(root, "groups")
     group = SubElement(groups, "group")
-    et_text(group, "uuid", uid("group", GROUP))
     et_text(group, "name", GROUP)
 
     templates = SubElement(root, "templates")
     tpl = SubElement(templates, "template")
-    et_text(tpl, "uuid", uid("template", TPL))
     et_text(tpl, "template", TPL)
     et_text(tpl, "name", TPL)
     et_text(
@@ -962,9 +987,9 @@ def build_xml(catalog: list[dict]) -> str:
         "description",
         "Шаблон SNMP для WEB/SNMP-адаптера АТС-КОНВЕРС WEBtel II ES AUX "
         "(ИБП EcoPower / OnePower Pro).\n\n"
-        "Формат: Zabbix 5.4 XML.\n"
+        "Формат: Zabbix 5.0 XML (подходит для 5.0.8).\n"
         "Протокол адаптера: SNMP v1, enterprise OID 1.3.6.1.4.1.22138.1.10.\n"
-        "Источник OID: руководство КСДП.00080-10, таблица 16.\n\n"
+        "Источник OID: файл WEBtel_II_ES_AUX.mib.\n\n"
         "На узле создайте SNMP-интерфейс версии SNMPv1 (адаптер не поддерживает v2c/v3) "
         "и community, настроенный на странице SNMP адаптера (по умолчанию обычно public).\n\n"
         "Трёхфазные OID на однофазном ИБП станут unsupported — это нормально.\n"
@@ -976,10 +1001,14 @@ def build_xml(catalog: list[dict]) -> str:
     tg = SubElement(tgroups, "group")
     et_text(tg, "name", GROUP)
 
+    apps = SubElement(tpl, "applications")
+    for name in sorted(set(APP_BY_COMPONENT.values())):
+        app = SubElement(apps, "application")
+        et_text(app, "name", name)
+
     items_el = SubElement(tpl, "items")
     for it in catalog:
         item = SubElement(items_el, "item")
-        et_text(item, "uuid", uid("item", it["key"]))
         et_text(item, "name", it["name"])
         et_text(item, "type", "SNMP_AGENT")
         et_text(item, "snmp_oid", it["oid"])
@@ -1008,14 +1037,16 @@ def build_xml(catalog: list[dict]) -> str:
             add_preprocessing(item, steps)
         if "valuemap" in it:
             add_valuemap_ref(item, it["valuemap"])
-        add_tags(item, it.get("tags", {"component": "ups"}))
+
+        applications = SubElement(item, "applications")
+        application = SubElement(applications, "application")
+        et_text(application, "name", app_name(it.get("tags")))
 
         if it.get("triggers"):
             trigs = SubElement(item, "triggers")
             for tr in it["triggers"]:
                 t = SubElement(trigs, "trigger")
-                et_text(t, "uuid", uid("trigger", it["key"], tr["id"]))
-                et_text(t, "expression", tr["expression"])
+                et_text(t, "expression", to_classic_expr(tr["expression"]))
                 et_text(t, "name", tr["name"])
                 if "description" in tr:
                     et_text(t, "description", tr["description"])
@@ -1031,21 +1062,9 @@ def build_xml(catalog: list[dict]) -> str:
         et_text(m, "value", value)
         et_text(m, "description", descr)
 
-    vms = SubElement(tpl, "valuemaps")
-    for name, mappings in VALUEMAPS.items():
-        vm = SubElement(vms, "valuemap")
-        et_text(vm, "uuid", uid("valuemap", name))
-        et_text(vm, "name", name)
-        maps = SubElement(vm, "mappings")
-        for value, newvalue in mappings:
-            mp = SubElement(maps, "mapping")
-            et_text(mp, "value", value)
-            et_text(mp, "newvalue", newvalue)
-
     graphs_el = SubElement(tpl, "graphs")
     for g in GRAPHS:
         ge = SubElement(graphs_el, "graph")
-        et_text(ge, "uuid", uid("graph", g["name"]))
         et_text(ge, "name", g["name"])
         gis = SubElement(ge, "graph_items")
         for idx, (key, color) in enumerate(g["items"]):
@@ -1062,10 +1081,19 @@ def build_xml(catalog: list[dict]) -> str:
             et_text(itref, "host", TPL)
             et_text(itref, "key", key)
 
+    vmaps = SubElement(root, "value_maps")
+    for name, mappings in VALUEMAPS.items():
+        vm = SubElement(vmaps, "value_map")
+        et_text(vm, "name", name)
+        maps = SubElement(vm, "mappings")
+        for value, newvalue in mappings:
+            mp = SubElement(maps, "mapping")
+            et_text(mp, "value", value)
+            et_text(mp, "newvalue", newvalue)
+
     xml_bytes = tostring(root, encoding="utf-8")
     parsed = minidom.parseString(xml_bytes)
     pretty = parsed.toprettyxml(indent="    ", encoding="UTF-8").decode("utf-8")
-    # minidom adds extra XML declaration handling; keep one declaration
     if pretty.startswith("<?xml"):
         return pretty
     return '<?xml version="1.0" encoding="UTF-8"?>\n' + pretty
@@ -1076,7 +1104,7 @@ MIB = r'''UPS-WEBTEL-II-ES-AUX-MIB DEFINITIONS ::= BEGIN
 -- Reconstructed from ATS-CONVERS user manual KSDP.00080-10 table 16
 -- for WEB/SNMP adapter WEBtel II ES AUX.
 -- Enterprise number 22138 = ATS-KONVERS Ltd. (IANA PEN).
--- This MIB is for snmptranslate / documentation. Zabbix 5.4 cannot import MIB
+-- This MIB is for snmptranslate / documentation. Zabbix cannot import MIB
 -- files as templates; use the XML template in zabbix/.
 
 IMPORTS
@@ -1340,28 +1368,31 @@ END
 '''
 
 
-README = r'''# Шаблон Zabbix 5.4 для WEBtel II ES AUX
+README = r'''# Шаблон Zabbix 5.0 для WEBtel II ES AUX
 
 MIB-файл из архива `WEBtel_II_ES_AUX_mib.zip` **нельзя импортировать в Zabbix**.
 Это SNMP MIB (описание OID для `snmptranslate` / HP OpenView / Power Net Agent),
-а не шаблон мониторинга. Поэтому на Zabbix 5.4 «просто загрузить mib» не получится.
+а не шаблон мониторинга. Поэтому «просто загрузить mib» в Zabbix не получится.
 
 В этом репозитории:
 
 | Файл | Назначение |
 | --- | --- |
-| `zabbix/zbx_webtel_ii_es_aux_5.4.xml` | Шаблон для импорта в **Zabbix 5.4** (XML) |
-| `zabbix/zbx_webtel_ii_es_aux_5.4.xml.zip` | XML + оригинальный MIB + README |
+| `zabbix/zbx_webtel_ii_es_aux_5.0.xml` | Шаблон для импорта в **Zabbix 5.0.x** (в т.ч. 5.0.8) |
+| `zabbix/zbx_webtel_ii_es_aux_5.0.xml.zip` | XML + оригинальный MIB + README |
 | `mibs/WEBtel_II_ES_AUX.mib` | Оригинальный MIB АТС-КОНВЕРС (не импортируется в Zabbix) |
 | `docs/oids.md` | Краткая таблица OID для `snmpget` |
 
 XML собран по файлу `WEBtel_II_ES_AUX.mib` (модуль `WEBTEL_II_ES_AUX-MIB`,
 enterprise `1.3.6.1.4.1.22138`, продукт `webtel_ii_es_aux` = `.1.10`).
 
-## Как импортировать в Zabbix 5.4
+Формат: **Zabbix 5.0**. На 5.0.8 файл с `<version>5.4</version>` даёт ошибку
+«неподдерживаемый номер версии».
+
+## Как импортировать в Zabbix 5.0.8
 
 1. **Configuration → Templates → Import**.
-2. Выберите `zabbix/zbx_webtel_ii_es_aux_5.4.xml` (если скачали zip — сначала распакуйте, импортируется именно XML, не zip).
+2. Выберите `zabbix/zbx_webtel_ii_es_aux_5.0.xml` (если скачали zip — сначала распакуйте, импортируется именно XML, не zip и не `.mib`).
 3. Правила импорта оставьте по умолчанию (Create new / Update existing).
 4. Нажмите **Import**. Должен появиться шаблон `UPS WEBtel II ES AUX SNMP`
    в группе `Templates/Power`.
@@ -1481,10 +1512,8 @@ def validate(catalog: list[dict], xml_text: str) -> None:
     from xml.etree.ElementTree import fromstring
 
     tree = fromstring(xml_text)
-    assert tree.findtext("version") == "5.4"
-    uuids = [el.text for el in tree.findall(".//uuid")]
-    assert all(u and len(u) == 32 and u.isalnum() for u in uuids), uuids[:3]
-    assert len(uuids) == len(set(uuids)), "duplicate uuid"
+    assert tree.findtext("version") == "5.0"
+    assert not tree.findall(".//uuid"), "5.0 XML must not contain uuid"
     keys = {it["key"] for it in catalog}
     for it in catalog:
         assert it["oid"].startswith(".")
@@ -1492,7 +1521,9 @@ def validate(catalog: list[dict], xml_text: str) -> None:
     for g in GRAPHS:
         for key, _color in g["items"]:
             assert key in keys, key
-    print(f"OK: {len(catalog)} items, {len(uuids)} uuids")
+    expr = tree.findtext(".//triggers/trigger/expression")
+    assert expr and expr.startswith("{") and "last(/" not in (tree.findtext(".//triggers/trigger/expression") or "")
+    print(f"OK: {len(catalog)} items, version 5.0")
 
 
 def main() -> None:
@@ -1500,7 +1531,7 @@ def main() -> None:
     xml_text = build_xml(catalog)
     validate(catalog, xml_text)
 
-    xml_path = ROOT / "zabbix" / "zbx_webtel_ii_es_aux_5.4.xml"
+    xml_path = ROOT / "zabbix" / "zbx_webtel_ii_es_aux_5.0.xml"
     mib_path = ROOT / "mibs" / "UPS-WEBTEL-II-ES-AUX.mib"
     readme_path = ROOT / "README.md"
     oids_path = ROOT / "docs" / "oids.md"
@@ -1512,7 +1543,7 @@ def main() -> None:
 
     import zipfile
 
-    zip_path = ROOT / "zabbix" / "zbx_webtel_ii_es_aux_5.4.xml.zip"
+    zip_path = ROOT / "zabbix" / "zbx_webtel_ii_es_aux_5.0.xml.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         zf.write(xml_path, arcname=xml_path.name)
         orig_mib = ROOT / "mibs" / "WEBtel_II_ES_AUX.mib"

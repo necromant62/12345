@@ -1,25 +1,28 @@
-# Шаблон Zabbix 5.4 для WEBtel II ES AUX
+# Шаблон Zabbix 5.0 для WEBtel II ES AUX
 
 MIB-файл из архива `WEBtel_II_ES_AUX_mib.zip` **нельзя импортировать в Zabbix**.
 Это SNMP MIB (описание OID для `snmptranslate` / HP OpenView / Power Net Agent),
-а не шаблон мониторинга. Поэтому на Zabbix 5.4 «просто загрузить mib» не получится.
+а не шаблон мониторинга. Поэтому «просто загрузить mib» в Zabbix не получится.
 
 В этом репозитории:
 
 | Файл | Назначение |
 | --- | --- |
-| `zabbix/zbx_webtel_ii_es_aux_5.4.xml` | Шаблон для импорта в **Zabbix 5.4** (XML) |
-| `zabbix/zbx_webtel_ii_es_aux_5.4.xml.zip` | XML + оригинальный MIB + README |
+| `zabbix/zbx_webtel_ii_es_aux_5.0.xml` | Шаблон для импорта в **Zabbix 5.0.x** (в т.ч. 5.0.8) |
+| `zabbix/zbx_webtel_ii_es_aux_5.0.xml.zip` | XML + оригинальный MIB + README |
 | `mibs/WEBtel_II_ES_AUX.mib` | Оригинальный MIB АТС-КОНВЕРС (не импортируется в Zabbix) |
 | `docs/oids.md` | Краткая таблица OID для `snmpget` |
 
 XML собран по файлу `WEBtel_II_ES_AUX.mib` (модуль `WEBTEL_II_ES_AUX-MIB`,
 enterprise `1.3.6.1.4.1.22138`, продукт `webtel_ii_es_aux` = `.1.10`).
 
-## Как импортировать в Zabbix 5.4
+Формат: **Zabbix 5.0**. На 5.0.8 файл с `<version>5.4</version>` даёт ошибку
+«неподдерживаемый номер версии».
+
+## Как импортировать в Zabbix 5.0.8
 
 1. **Configuration → Templates → Import**.
-2. Выберите `zabbix/zbx_webtel_ii_es_aux_5.4.xml` (если скачали zip — сначала распакуйте, импортируется именно XML, не zip).
+2. Выберите `zabbix/zbx_webtel_ii_es_aux_5.0.xml` (если скачали zip — сначала распакуйте, импортируется именно XML, не zip и не `.mib`).
 3. Правила импорта оставьте по умолчанию (Create new / Update existing).
 4. Нажмите **Import**. Должен появиться шаблон `UPS WEBtel II ES AUX SNMP`
    в группе `Templates/Power`.

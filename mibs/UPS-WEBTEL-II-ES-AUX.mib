@@ -1,0 +1,267 @@
+UPS-WEBTEL-II-ES-AUX-MIB DEFINITIONS ::= BEGIN
+
+-- Reconstructed from ATS-CONVERS user manual KSDP.00080-10 table 16
+-- for WEB/SNMP adapter WEBtel II ES AUX.
+-- Enterprise number 22138 = ATS-KONVERS Ltd. (IANA PEN).
+-- This MIB is for snmptranslate / documentation. Zabbix 5.4 cannot import MIB
+-- files as templates; use the XML template in zabbix/.
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, enterprises, Integer32, Gauge32
+        FROM SNMPv2-SMI
+    DisplayString
+        FROM SNMPv2-TC;
+
+atsConvers MODULE-IDENTITY
+    LAST-UPDATED "202609070000Z"
+    ORGANIZATION "ATS-KONVERS Ltd."
+    CONTACT-INFO "http://www.atsconvers.ru"
+    DESCRIPTION
+        "Private MIB for WEBtel II ES AUX SNMP adapter
+         (EcoPower / OnePower Pro UPS)."
+    ::= { enterprises 22138 }
+
+products OBJECT IDENTIFIER ::= { atsConvers 1 }
+webtelIiEsAux OBJECT IDENTIFIER ::= { products 10 }
+
+status OBJECT IDENTIFIER ::= { webtelIiEsAux 1 }
+ratings OBJECT IDENTIFIER ::= { webtelIiEsAux 2 }
+measurements OBJECT IDENTIFIER ::= { webtelIiEsAux 3 }
+configuration OBJECT IDENTIFIER ::= { webtelIiEsAux 4 }
+adapterConfig OBJECT IDENTIFIER ::= { webtelIiEsAux 5 }
+trapArgs OBJECT IDENTIFIER ::= { webtelIiEsAux 6 }
+traps OBJECT IDENTIFIER ::= { webtelIiEsAux 7 }
+
+webtelConnected OBJECT-TYPE
+    SYNTAX INTEGER { disconnected(0), connected(1) }
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "WEBtel to UPS connection status."
+    ::= { status 1 }
+
+webtelUpsMode OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "UPS operating mode. Manual lists: PowerOn, Standby, Bypass,
+         Online, Battery, BatteryTest, Alarm, ECO, Converter, Shutdown."
+    ::= { status 2 }
+
+upsModel OBJECT-TYPE
+    SYNTAX DisplayString
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "UPS model name."
+    ::= { ratings 1 }
+
+upsRatedVA OBJECT-TYPE
+    SYNTAX Gauge32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Rated output apparent power, VA."
+    ::= { ratings 2 }
+
+upsPowerFactor OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Power factor, percent."
+    ::= { ratings 3 }
+
+upsRatedVin OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Rated input voltage, V."
+    ::= { ratings 4 }
+
+upsRatedVout OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION "Rated output voltage, V (200/208/220/230/240)."
+    ::= { ratings 5 }
+
+upsRatedIout OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Rated output current, A."
+    ::= { ratings 6 }
+
+upsRatedFreq OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION "Rated output frequency, 0.1 Hz (500 or 600)."
+    ::= { ratings 7 }
+
+upsRatedVbatt OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Rated battery voltage, 0.1 V."
+    ::= { ratings 8 }
+
+measInput OBJECT IDENTIFIER ::= { measurements 1 }
+measBypass OBJECT IDENTIFIER ::= { measurements 2 }
+measOutput OBJECT IDENTIFIER ::= { measurements 3 }
+measInternal OBJECT IDENTIFIER ::= { measurements 4 }
+
+inputVoltageL1 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Input voltage L1 or single-phase, 0.1 V."
+    ::= { measInput 1 }
+
+inputVoltageL2 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Input voltage L2, 0.1 V (3-phase)."
+    ::= { measInput 2 }
+
+inputVoltageL3 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Input voltage L3, 0.1 V (3-phase)."
+    ::= { measInput 3 }
+
+inputVoltageL1L2 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Input line voltage L1-L2, 0.1 V."
+    ::= { measInput 4 }
+
+inputVoltageL2L3 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Input line voltage L2-L3, 0.1 V."
+    ::= { measInput 5 }
+
+inputVoltageL3L1 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Input line voltage L3-L1, 0.1 V."
+    ::= { measInput 6 }
+
+inputFrequency OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Input frequency, 0.1 Hz."
+    ::= { measInput 7 }
+
+outputVoltageL1 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Output voltage L1 or single-phase, 0.1 V."
+    ::= { measOutput 1 }
+
+outputVoltageL2 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Output voltage L2, 0.1 V."
+    ::= { measOutput 2 }
+
+outputVoltageL3 OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Output voltage L3, 0.1 V."
+    ::= { measOutput 3 }
+
+outputFrequency OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Output frequency, 0.1 Hz."
+    ::= { measOutput 7 }
+
+outputCurrent OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Output current or sum of phases, 0.1 A."
+    ::= { measOutput 8 }
+
+outputLoad OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Output load percent."
+    ::= { measOutput 12 }
+
+upsTemperature OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "UPS temperature, 0.1 C."
+    ::= { measInternal 1 }
+
+batteryVoltage OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Battery voltage, 0.1 V."
+    ::= { measInternal 2 }
+
+batteryRuntime OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Estimated battery runtime, minutes."
+    ::= { measInternal 3 }
+
+batteryCharge OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Battery charge percent."
+    ::= { measInternal 4 }
+
+warningRegister OBJECT-TYPE
+    SYNTAX Gauge32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "64-bit warning register (see manual table 17)."
+    ::= { measInternal 5 }
+
+faultCode OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Current fault code (see manual table 18)."
+    ::= { measInternal 6 }
+
+webtelFirmware OBJECT-TYPE
+    SYNTAX DisplayString
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "WEBtel adapter firmware version."
+    ::= { webtelIiEsAux 8 }
+
+adapterSerial OBJECT-TYPE
+    SYNTAX DisplayString
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION "WEBtel adapter serial number."
+    ::= { webtelIiEsAux 9 }
+
+upsSerial OBJECT-TYPE
+    SYNTAX DisplayString
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION "UPS serial number."
+    ::= { webtelIiEsAux 10 }
+
+END
+
